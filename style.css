@@ -1,0 +1,72 @@
+ul {
+   margin: 25px 0 0 0;
+   padding: 0;
+}
+
+li {
+   height: 100px;
+   display: inline;
+   padding-right: 15px;
+   margin-top: 50px;
+}
+
+.logos {
+   height: 200px;
+}
+
+.logo {
+   height: 100px;
+}
+
+#container {
+   margin: 0 auto;
+   background-image: url(http://vignette4.wikia.nocookie.net/fantendo/images/5/51/Pok%C3%A9mon_Stadium_2.jpg/revision/latest?cb=20141221100214);
+   background-position: center;
+   background-attachment: fixed;
+   width: 980px;
+   height: 780px;
+}
+
+header {
+   background-color: white;
+   text-align: center;
+   height: 150px;
+}
+
+.open {
+   overflow: hidden;
+   float: none;
+   transition: height 200ms;
+   visibility: visible;
+}
+
+.closed {
+   height: 0;
+   overflow: hidden;
+   transition: height 200ms;
+}
+
+.health {
+   display: block;
+   margin: 0;
+   padding: 0;
+   overflow: hidden;
+}
+
+#health1 {
+   max-width: 42.5%;
+   height: 200px;
+   background-color: red;
+   background: -webkit-gradient(linear, left top, right top, from(black), to(indianred));
+   background: -webkit-linear-gradient(left, black, indianred);
+   float: left;
+}
+
+#health2 {
+   max-width: 42.5%;
+   height: 200px;
+   background-color: blue;
+   background: -webkit-gradient(linear, right top, left top, from(black), to(cornflowerblue));
+   background: -webkit-linear-gradient(right, black, cornflowerblue);
+   float: right;
+}

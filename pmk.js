@@ -172,7 +172,7 @@ function charSelectScreen(){
 
          //toggle card location on click
          //swap choice before confirming
-         debugger
+
          //cannot detach here bc then it has no parent.
          //how can I check the other-way around?
          //see if deck has children, and how many
@@ -181,8 +181,8 @@ function charSelectScreen(){
          //if this card is now in deck,
          //move it back to select screen.
          if (eo.parentElement.id === 'deck') {
-            eo.detach();
-            eo.appendTo(charSelect);
+            $(eo).detach();
+            $(eo).appendTo(charSelect);
 
          //if this card is not in deck,
          //move it there
@@ -201,13 +201,12 @@ function charSelectScreen(){
    //Make buttons that CONFIRM character choice.
    //and switch player
 
-
-   //diff bw js and jQ is negligible sometimes. :/
    var playButt1 = doc.createElement('button');
       playButt1.innerHTML = 'Player One: CONFIRM';
       playButt1.className = 'play-butt';
       playButt1.id = 'playButt1';
 
+   //diff bw js and jQ is negligible sometimes. :/
    var playButt2 = $('<button>');
       playButt2.text('Player Two: CONFIRM');
       playButt2.attr('class', 'play-butt');
@@ -220,8 +219,6 @@ function charSelectScreen(){
    )
 
 };
-
-// var charHoverRender = function(character)
 
 //Toggle turns using button for each player.
 //test with displaying diff instructions

@@ -201,7 +201,7 @@ img.char-avatars {
 
 #deck {
    border: 10px dashed hotpink;
-   height: 10px;
+   height: 100px;
    width: 500px;
    z-index: 20;
    position: relative;

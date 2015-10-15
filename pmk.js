@@ -156,23 +156,22 @@ function charSelectScreen(){
 
       //click adds charObj to player deck
       $(char).on('click', function(){
-         debugger
+         //bind event object
+         eo = $(this).get(0);
          //if no deck, create deck
          var deckDiv = $('div#deck').length ? $('div#deck') : $('<div id="deck">');
 
          //add after arena, inside container.
          deckDiv.appendTo($('#arena'));
-         debugger
+
          //if deck already has a card - ALERT!
-         if (deckDiv.children().length) {
-            debugger
-            alert('Greedy! You can play as one character at a time!\n                   Click a character in your deck to remove it first,\n THEN you can choose another one.');
-         }
+         // if ($('div#deck').children().length > deckMax) {
+         //    debugger
+         //    alert('Greedy! You can play as one character at a time!\n Click a character in your deck to remove it first,\n THEN you can choose another one.');
+         // }
 
          //toggle card location on click
          //swap choice before confirming
-
-         console.log($(this));
          debugger
          //cannot detach here bc then it has no parent.
          //how can I check the other-way around?
@@ -181,15 +180,15 @@ function charSelectScreen(){
 
          //if this card is now in deck,
          //move it back to select screen.
-         if (this.parentElement.id === 'deck') {
-            this.detach();
-            this.appendTo(charSelect);
+         if (eo.parentElement.id === 'deck') {
+            eo.detach();
+            eo.appendTo(charSelect);
 
          //if this card is not in deck,
          //move it there
          } else {
-            this.detach();
-            this.appendTo($('deck'))
+            $(eo).detach();
+            $(eo).appendTo('div#deck');
          }
 
       });

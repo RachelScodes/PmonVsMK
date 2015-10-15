@@ -69,6 +69,8 @@ var deck = {
       def: ['The Ring', 1.5, 'http://www.fightersgeneration.com/np2/char1/gifs/sindel-mk3-slip.gif'], //, 'sound-src-url??'],
       accuracy: 8.5,
    }
+
+   
 };
 
 var charSelectScreen = function (){
@@ -80,7 +82,17 @@ var charSelectScreen = function (){
       char.setAttribute('class', 'char-avatars');
       char.html = '<img src="' + deck[i].avatar[0] + '" class="char-avatar-imgs"></img>';
       charSelect.appendChild(char);
+      char.on({
+    mouseenter: function ((this).val()) {
+        //push elements from deck[value] to matching html divs
+    },
+    mouseleave: function () {
+        //restore render div to default
+    }
+});
    }
    $('#card-render').append(charSelect);
 
 };
+
+var charHoverRender = function(character)

@@ -201,25 +201,3 @@ charThumbListScreen();
 
    //Make buttons that CONFIRM character choice.
    //and switch player
-// function togglePlayer() {
-//    for (var b = 2; b !== 0; b-=) {
-//       console.log('test');
-//    }
-//
-//    var playButt1 = doc.createElement('button');
-//       playButt1.innerHTML = 'Player One: CONFIRM';
-//       playButt1.className = 'play-butt';
-//       playButt1.id = 'playButt1';
-//
-//    //diff bw js and jQ is negligible sometimes. :/
-//    var playButt2 = $('<button>');
-//       playButt2.text('Player Two: CONFIRM');
-//       playButt2.attr('class', 'play-butt');
-//       playButt2.attr('id', 'playButt2');
-//
-//    $('.play-butt').each().on('click', function(){
-//          //$(this).css('ba')
-//          debugger
-//       }
-//    )
-// }

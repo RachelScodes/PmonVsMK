@@ -1,5 +1,24 @@
 notepad
 
+line 86 of html:
+<!-- selected cards go here -->
+<!-- <div id="deck"></div> -->
+
+
+!SHAKE!! jQuery effects
+
+//future feature:
+//build decks
+// //if this card is not in deck,
+// //move it there
+// } else {
+//    $(eo).detach();
+//    $(eo).appendTo('div#deck');
+// }
+
+
+
+
 //pokemon logos:
 http://uk.tomy.com/sites/all/themes/pokemon_bw_uk/images/pokemon-logo.png
 http://vignette3.wikia.nocookie.net/logopedia/images/e/e5/Pokemon_logo.png/revision/latest?cb=20120128115827

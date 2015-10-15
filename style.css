@@ -173,7 +173,7 @@ header {
    background-repeat: no-repeat;
 }
 
-#char-select-screen {
+#char-thumbnail-ul {
    overflow: hidden;
    position: relative;
    list-style: none;

@@ -1,26 +1,10 @@
 window.onload = function () {
-    console.log("It's loaded!");
+  console.log("It's loaded!");
+
 }
 
-
-    //no idea what goes here yet lol
-    //global scorekeeping variables
-    playerOne = true;
-
-    if (playerOne) {
-      $('#instructions2').detach();
-    }
-    //Display instructions:
-      // if (playerOne) {
-      //    $('#instructions2').detach();
-      //    playerOne = false;
-      // }
-
-      if (!playerOne) {
-         $('#instructions2').appendTo($('.default'));
-         $('#instructions1').detach();
-         playerOne = true
-      }
+//global scorekeeping variables
+playerOne = true;
 
 var doc = document;
 
@@ -67,12 +51,18 @@ var deck = {
    }
 
 };
+
 var deckMax = 1;
 
-charSelectScreen();
-//deck.sort();
+$('#instructions2').detach();
 
-//to start game, remove header
+if (!playerOne) {
+   $('#instructions2').appendTo($('.default'));
+   $('#instructions1').detach();
+   playerOne = true;
+}
+
+//start game
 $(function() {
   var start = $("#start");
   var head = $("header");
@@ -84,17 +74,7 @@ $(function() {
 
      //erase the start button
      start.detach();
-     //show character select screen
 
-     //wait for character input to set width of health bars
-
-     //character input rec'd for both players
-
-     //coin toss determines who is player one
-     //set width of health bars based on health
-     //of chosen character for each player
-
-     //only the first time:
      //roll back masthead,
     if(head.hasClass('open')) {
       head.removeClass('open');
@@ -106,6 +86,24 @@ $(function() {
       health.height('50px');
    }
 
+   //show character select screen
+
+   //deck selection
+
+   //toggle player
+
+   //
+
+   //use character deck to set width of health bars
+
+   //character input rec'd for both players
+
+   //coin toss determines who is player one
+   //set width of health bars based on health
+   //of chosen character for each player
+
+
+
   //show game commands
   //TBD
 
@@ -115,11 +113,11 @@ $(function() {
 
 
 
-function charSelectScreen(){
+function charThumbListScreen(){
 
    var container = $('#character-select');
-   var charSelect = doc.createElement('ul');
-   charSelect.id = "char-select-screen";
+   var charThumbList = doc.createElement('ul');
+   charThumbList.id = "char-thumbnail-ul";
 
    var inst = $('.default');
 
@@ -128,11 +126,7 @@ function charSelectScreen(){
       char.setAttribute('class', 'char-avatars');
       char.setAttribute('value', deck[i].name);
       $(char).css('background-image', 'url(' + deck[i].avatar[0] + ')');
-      charSelect.appendChild(char);
-
-      // //to use for scoping in future click and hover events:
-      // var charHov = .attr('value').toLowerCase();
-      // var charObj = deck[charHov];
+      charThumbList.appendChild(char);
 
       //hover displays char stats in #card-render
       $(char).on({
@@ -153,72 +147,79 @@ function charSelectScreen(){
             inst.prependTo($('#card-render'));
          }
       });
+      //end hover/char preview event
 
-      //click adds charObj to player deck
+      //click adds/removes charObjs from deck
+      //aka swap char choice before confirming
       $(char).on('click', function(){
-         //bind event object
+         //eo is event object
          eo = $(this).get(0);
+         debugger
+
          //if no deck, create deck
-         var deckDiv = $('div#deck').length ? $('div#deck') : $('<div id="deck">');
+         var deckJQ = $('div#deck').length ? $('div#deck') : $('<div id="deck">');
+         deckJS = $(deckJQ).get(0);
 
-         //add after arena, inside container.
-         deckDiv.appendTo($('#arena'));
+         //and add deck to arena, inside container.
+         if (deckJS.parentElement !== 'div#arena'){
+            $(deckJQ).appendTo($('#arena'));
+         }//if deck is already there, then nothing.
 
-         //if deck already has a card - ALERT!
-         // if ($('div#deck').children().length > deckMax) {
-         //    debugger
-         //    alert('Greedy! You can play as one character at a time!\n Click a character in your deck to remove it first,\n THEN you can choose another one.');
-         // }
-
-         //toggle card location on click
-         //swap choice before confirming
-
-         //cannot detach here bc then it has no parent.
-         //how can I check the other-way around?
-         //see if deck has children, and how many
-         //$(this).detach();
-
-         //if this card is now in deck,
-         //move it back to select screen.
-         if (eo.parentElement.id === 'deck') {
+         //if eo is currently in deck,
+         //move it back to char select screen.
+         if (eo.parentElement.id == 'deck') {
             $(eo).detach();
-            $(eo).appendTo(charSelect);
-
-         //if this card is not in deck,
-         //move it there
-         } else {
-            $(eo).detach();
-            $(eo).appendTo('div#deck');
+            $(eo).appendTo(charThumbList);
          }
 
+         //if card is not in deck, but deck
+         //already has a card - ALERT!
+         else if ((!$('#deck').is(':empty')) && (eo.parentElement.id !== 'deck')){
+
+         //TO-DO - refactor/update: pop over instructions?
+            alert('Greedy! You can play as one character at a time!\n Click a character in your deck to remove it first,\n THEN you can choose another one.');
+         }
+
+         //if deck is empty and card is clicked
+         //add it to the damned deck awready! lol
+          else if ($('#deck').is(':empty')) {
+            //detach clicked char
+            $(eo).detach();
+            //add it to deck
+            $(eo).appendTo($('#deck'));
+         }
       });
-
-
+      //end char move click event
 
    }
-   container.append(charSelect);
+   container.append(charThumbList);
+};
+
+charThumbListScreen();
+
+
 
    //Make buttons that CONFIRM character choice.
    //and switch player
-
-   var playButt1 = doc.createElement('button');
-      playButt1.innerHTML = 'Player One: CONFIRM';
-      playButt1.className = 'play-butt';
-      playButt1.id = 'playButt1';
-
-   //diff bw js and jQ is negligible sometimes. :/
-   var playButt2 = $('<button>');
-      playButt2.text('Player Two: CONFIRM');
-      playButt2.attr('class', 'play-butt');
-      playButt2.attr('id', 'playButt2');
-
-   $('.play-butt').each().on('click', function(){
-         //$(this).css('ba')
-         debugger
-      }
-   )
-
-};
-
-//Toggle turns using button for each player.
-//test with displaying diff instructions
+// function togglePlayer() {
+//    for (var b = 2; b !== 0; b-=) {
+//       console.log('test');
+//    }
+//
+//    var playButt1 = doc.createElement('button');
+//       playButt1.innerHTML = 'Player One: CONFIRM';
+//       playButt1.className = 'play-butt';
+//       playButt1.id = 'playButt1';
+//
+//    //diff bw js and jQ is negligible sometimes. :/
+//    var playButt2 = $('<button>');
+//       playButt2.text('Player Two: CONFIRM');
+//       playButt2.attr('class', 'play-butt');
+//       playButt2.attr('id', 'playButt2');
+//
+//    $('.play-butt').each().on('click', function(){
+//          //$(this).css('ba')
+//          debugger
+//       }
+//    )
+// }

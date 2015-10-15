@@ -1,5 +1,25 @@
+/* @font-face kit by Fonts2u (http://www.fonts2u.com) */
+@font-face {
+   font-family:"Mortal Kombat 1";
+   src:url("mkFont/mk1.eot?") format("eot"),
+       url("mkFont/mk1.woff") format("woff"),
+       url("mkFont/mk1.ttf") format("truetype"),
+       url("mkFont/mk1.svg#MortalKombat1") format("svg");
+   font-weight: bolder;
+   font-style: normal;
+}
+
 body {
    overflow-y: hidden;
+   font-family: 'Mortal Kombat 1', fantasy, serif;
+   background: url('http://static.comicvine.com/uploads/original/3/35945/3142346-mk.arena.jpg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
 }
 
 ul {
@@ -25,7 +45,7 @@ li {
 #container {
    margin: 0 auto;
    /*background-image: url(http://vignette4.wikia.nocookie.net/fantendo/images/5/51/Pok%C3%A9mon_Stadium_2.jpg/revision/latest?cb=20141221100214);*/
-   background-image: url(http://static.comicvine.com/uploads/original/3/35945/3142346-mk.arena.jpg);
+   background-image: url();
    background-position: center;
    background-attachment: fixed;
    max-width: 1080px;
@@ -52,26 +72,36 @@ header {
 }
 
 .health {
+   max-width: 1080px;
    display: block;
    margin: 0;
    padding: 0;
    overflow: hidden;
+   font-size: 40px;
+   color: ivory;
+   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+   line-height: 20px;
 }
 
 #health1 {
-   max-width: 42.5%;
+   margin-right: 30px;
    height: 200px;
    background-color: red;
    background: -webkit-gradient(linear, left top, right top, from(black), to(indianred));
    background: -webkit-linear-gradient(left, black, indianred);
    float: left;
+   position: relative;
+   line-height: 50px;
 }
 
 #health2 {
-   max-width: 42.5%;
+   margin-left: 30px;
    height: 200px;
    background-color: blue;
    background: -webkit-gradient(linear, right top, left top, from(black), to(cornflowerblue));
    background: -webkit-linear-gradient(right, black, cornflowerblue);
    float: right;
+   position: relative;
+   vertical-align:bottom;
+   line-height: 50px;
 }

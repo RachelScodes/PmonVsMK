@@ -2,9 +2,10 @@ window.onload = function () {
     console.log("It's loaded!");
     //no idea what goes here yet lol
     //global scorekeeping variables
-    var playerOne = true;
+    playerOne = true;
 
     charSelectScreen();
+    deck.sort();
 
     //to start game, remove header
     $(function() {
@@ -41,6 +42,7 @@ window.onload = function () {
        }
 
       //show game commands
+      //TBD
 
 
       });
@@ -85,7 +87,7 @@ var deck = {
 
    scorpion: {
       name: 'Scorpion',
-      avatar: ['http://33.media.tumblr.com/f0bd4e780fe86557675903070dffa2a3/tumblr_mhqa0bHAC31s0pq6co1_250.gif', 'http://i225.photobucket.com/albums/dd155/GM123456/Scorpion_3d_UMK3_stumble.gif', 'http://i305.photobucket.com/albums/nn224/gigant3p/Scorpion_Dancing_by_Methados-1.gif'],
+      avatar: ['http://33.media.tumblr.com/f0bd4e780fe86557675903070dffa2a3/tumblr_mhqa0bHAC31s0pq6co1_250.gif', 'http://i225.photobucket.com/albums/dd155/GM123456/Scorpion_3d_UMK3_stumble.gif', 'http://www.gifmagic.com/queue/scorpion_dancing_by_methados1_23687.gif'],
       attack1: ['Spear', 4, 'Physical', 'ttp://orig12.deviantart.net/75fd/f/2013/099/8/0/gif_scorpion_get_over_here_animation_mk_by_luis_mortalkombat14-d6128nw.gif'], //, 'sound-src-url??'],
       attack2: ['Hellfire Punch', 4.5, 'Fire', 'http://orig03.deviantart.net/06a8/f/2013/100/0/e/gif_scorpion_toasty_fatality_mk_by_luis_mortalkombat14-d6167ab.gif'], //, 'sound-src-url??'],
       def: ['Flips and Stuff', 3, 'http://i225.photobucket.com/albums/dd155/GM123456/Scorpion_3d_UMK3_stumble.gif'], //, 'sound-src-url??'],
@@ -109,19 +111,20 @@ var charSelectScreen = function (){
       char.setAttribute('value', deck[i].name);
       $(char).css('background-image', 'url(' + deck[i].avatar[0] + ')');
       charSelect.appendChild(char);
-      debugger
       $(char).on({
          mouseenter: function (){
+            debugger
+            var charHov = $(this).attr('value').toLowerCase();
+            var charObj = deck[charHov];
             //push elements from deck[value] to matching html divs
             inst.detach();
 
             //
             //This is attaching scorpion every time. i want it to attach to the data for the character it's hovered over
             //
-            $('#char-name').html(deck[i].name);
-            debugger
-            $('#avi-preview').eq(0).css('background-image', 'url(' + deck[i].avatar[2] + ')')
-            $('#avi-preview').eq(0).css('background-position', 'center bottom');
+            debugger;
+            $('#char-name').html(charObj.name);
+            $('#avi-preview').eq(0).css('background-image', 'url(' + charObj.avatar[2] + ')');
          },
          mouseleave: function () {
             //restore render div to default
@@ -131,6 +134,34 @@ var charSelectScreen = function (){
    }
    container.append(charSelect);
 
+   //Make buttons that
+   // var playButt1 = $('<button>');
+   //    playButt1.html()='Player One: CONFIRM';
+   //    playButt1.id = 'playButt1';
+   //
+   // var playButt2 = $('<button>');
+   //    playButt2.html()='Player Two: CONFIRM';
+   //    playButt2.id = 'playButt2';
+   // $('<button>').each().setAttribute('class', 'play-butt')
+
 };
 
 // var charHoverRender = function(character)
+
+//Toggle turns using button for each player.
+//test with displaying diff instructions
+
+
+//Display instructions:
+on(click, function(){
+   if (playerOne) {
+      $('#instructions2').detach();
+      playerOne = false;
+   }
+
+   if (!playerOne) {
+      $('#instructions2').prependTo($('.default'));
+      $('#instructions1').detach();
+      playerOne = true
+   }
+})

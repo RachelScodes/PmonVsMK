@@ -191,4 +191,8 @@ img.char-avatars {
    border: 10px solid lightgray;
    height: 180px;
    width: 250px;
+   background-position: center bottom;
+   background-repeat: no-repeat;
+   background-size: contain;
+   background-color: grey;
 }

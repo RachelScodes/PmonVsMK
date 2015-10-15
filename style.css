@@ -125,6 +125,7 @@ header {
 #arena {
    margin-top: 30px;
    overflow: hidden;
+   overflow-y: scroll;
 }
 
 #card-render {
@@ -195,4 +196,14 @@ img.char-avatars {
    background-repeat: no-repeat;
    background-size: contain;
    background-color: grey;
+}
+
+#deck {
+   border: 10px dashed hotpink;
+   height: 180px;
+   width: inherit;
+   z-index: 20;
+   position: relative;
+   margin-top: 490px;
+   background-color: beige;
 }

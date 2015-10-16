@@ -21,11 +21,22 @@ header
 
 | name       | what it does  | applied to | attached to event? | explain | jQ |
 |------------|---------------------------|--------|-------|----------|----|
+|@font-face | "Mortal Kombat 1" | font-family | no | n/a | n/a
+|body | sets font, background, locks scroll | page | no | n/a | n/a |
+|ul | margins |   |  |  |  |
+|li   |display as inline, margin, padding  |  all `<li>` 's | no |   |  |
+|.logos, .logo | sizing | logos in header | |   |  |
 |#container  |selects main div  | div  | no  | used for css formatting  | $('#container') |
 |.open  | toggles visibility of sliding div | header, health | yes | onclick start |  |
 |.closed  | ibid | ibid | ibid | ibid |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
+|.health  | holds health bars  |  |  |  |  |
+|#health1  | player 1 health div  |  |  |  |  |
+|health2 |  player 2 health div |
+|.default | holds instructions, covers card render, hides on hover over avi |
+|#arena| holds game, including: char select, card-renders, deck renders |
+|.card | unassigned |
+|#card-render | holds preview of card on hover over avi |
+|#card-hover
 
 
 

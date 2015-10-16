@@ -50,7 +50,7 @@ window.onload = function () {
 
    };
 
-   var deckMax = 1;
+   var deckMax = 2;
 
    $('#instructions2').detach();
 
@@ -240,6 +240,13 @@ window.onload = function () {
 
      console.log('it\'s all loaded!');
 };
-
-
 //end onload
+
+function startBattle(){
+   //remove character select. and card render
+   $('#character-select').detach();
+   $('.card').each().detach();
+
+   //make battleground
+   $('<div>')
+}

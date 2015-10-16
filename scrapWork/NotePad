@@ -1,0 +1,147 @@
+notepad
+
+//pokemon logos:
+http://uk.tomy.com/sites/all/themes/pokemon_bw_uk/images/pokemon-logo.png
+http://vignette3.wikia.nocookie.net/logopedia/images/e/e5/Pokemon_logo.png/revision/latest?cb=20120128115827
+
+//static blood image:
+http://4e7221.medialib.glogster.com/media/001df47679f2096c8862ec0a42f6ce2311a6740265fad5642b73d0adc795b4c9/animatedblood-splatter.gif
+
+//dripping blood image:
+http://www.clipartbest.com/cliparts/9cp/ojr/9cpojrRdi.gif
+
+//pikachu
+//attack Electric
+http://orig15.deviantart.net/e860/f/2010/105/8/e/pikachu___volt_tackle_by_hanshumon.gif
+
+//attack Physical
+http://urpgdex.monbrey.com.au/art/models/25-2.gif
+
+//hurt pikachu
+http://i634.photobucket.com/albums/uu68/coocoo406/moving_pikachu.gif
+
+//winning pikachu
+http://i421.photobucket.com/albums/pp291/nin10dogirl/pikachu.gif~original
+http://i1263.photobucket.com/albums/ii631/Pokemon-Vampire-Knight-lover/pikachu_.gif
+
+//bloody win pikachu
+http://img06.deviantart.net/6dae/i/2011/030/1/7/pikacide_by_kid_viral-d38fbjk.jpg
+
+//dead pikachu
+http://t02.deviantart.net/qIauUAAZi3LyEERUiqEMA0CKWN4=/fit-in/150x150/filters:no_upscale():origin()/pre15/a015/th/pre/f/2013/019/f/9/dead_pikachu_by_pickachua-d5s17w6.png
+
+//happy clearer pikachu avi?
+http://www.pokemon-paradijs.com/animated-gifs/image/pikachu_rent2.gif
+
+------------------------------------------------------------------
+//sindel avi
+http://vignette3.wikia.nocookie.net/mortalkombat/images/9/93/Vs_sindel.gif/revision/latest?cb=20090917142727&path-prefix=es
+
+//sindell failing
+http://www.fightersgeneration.com/np2/char1/gifs/sindel-mk3-slip.gif
+
+//sindell dead
+http://www.theageofmammals.com/blogmedia/mk/sindel-falling.gif
+
+//sindell running
+http://bestanimations.com/Games/Computer/MortalCombat/Sindel/mortalkombatsindelanimation-3.gif
+
+
+
+//sleeping snorlax
+https://shadowdaleraven.files.wordpress.com/2013/03/snorlax.gif
+
+//snorlax jumping
+http://orig08.deviantart.net/66ad/f/2013/039/d/f/143att2_by_joshr691-d5u9qir.gif
+
+//snorlax walking
+http://33.media.tumblr.com/e6a9f362751cdc95b3be52196ee66b2b/tumblr_mnalxua3us1rfjowdo1_500.gif
+
+//snorlax backside
+http://38.media.tumblr.com/tumblr_lqidfpulvF1qg0dcvo1_500.gif
+
+//snorlax in a puff of smoke?
+http://i1014.photobucket.com/albums/af266/Nightslayer_321/Gifs/Snorlax-Rest_zpse7f40dd8.gif
+
+//snorlax i can fly! lol
+http://orig07.deviantart.net/876e/f/2010/269/9/1/flying_snorlax_by_mrsquirrelz-d2zif7h.gif
+
+//snorlax in cloud w ballooons
+http://38.media.tumblr.com/c3ae49a61b415c2f482c246bb56ca625/tumblr_n6ty6rHPpS1rjenv2o1_r1_250.gif
+
+//snorlax happy bounce
+http://media.giphy.com/media/bthPL7btdckYo/giphy.gif
+
+//snorlax dreaming of cheeseburgers
+http://orig09.deviantart.net/05cd/f/2012/205/a/b/abfc46cea220f49281f2ab044d7170cb-d58f5pr.gif
+
+
+//scorpion axe swing
+http://i225.photobucket.com/albums/dd155/GM123456/AxeUppercut_v2_b.gif
+
+//scorpion fireball
+http://orig03.deviantart.net/06a8/f/2013/100/0/e/gif_scorpion_toasty_fatality_mk_by_luis_mortalkombat14-d6167ab.gif
+
+//scorpion ready
+http://33.media.tumblr.com/f0bd4e780fe86557675903070dffa2a3/tumblr_mhqa0bHAC31s0pq6co1_250.gif
+
+//GET OVER HERE!!!
+http://orig12.deviantart.net/75fd/f/2013/099/8/0/gif_scorpion_get_over_here_animation_mk_by_luis_mortalkombat14-d6128nw.gif
+
+//breakdancing scorpion win gif
+http://i305.photobucket.com/albums/nn224/gigant3p/Scorpion_Dancing_by_Methados-1.gif
+
+//scorpion falling
+http://i225.photobucket.com/albums/dd155/GM123456/Scorpion_3d_UMK3_stumble.gif
+
+
+
+      //   } else {
+      //     head.removeClass('closed');
+      //     head.addClass('open');
+      //     head.height(true);
+      //     health.removeClass('open');
+      //     health.addClass('closed');
+      //     health.height(0);
+
+
+
+      //when page loads, assign click event to start button
+         //when start button is clicked
+         //player1 = 'true';
+
+         //display character array
+            //shuffle characters each time?
+
+      //assign click event to character items
+         //click assigns that character to player
+         //click changes player1 to false (now player 2)
+
+
+      //assign hover event to character items
+         //on hover, display stats
+
+
+      // var characters = [array of character objects]
+      //
+      //
+      // characterObjects:
+
+
+
+//background tiles
+
+//Fire
+http://orig12.deviantart.net/1b19/f/2009/081/1/4/fire_seamless_tile_by_suicidecrew.jpg
+
+//Ice
+http://www.subdude-site.com/WebPages_Local/RefInfo/Computer/WebDev/WebPageTiles/tilesIce/tile_texture_chiseledIce_bright_bluish_256x256.jpg
+
+//Lightning
+http://orig13.deviantart.net/010b/f/2011/066/e/4/lightning_tile_by_fife_productions-d3b5ydf.jpg
+
+//earth
+http://reddirtpromotions.com/rdp/wp-content/uploads/2014/03/Desert-Cracks-Mud.jpg
+
+//water
+http://orig08.deviantart.net/1bd4/f/2008/119/2/4/seamless_pond_water_texture_by_fantasystock.jpg

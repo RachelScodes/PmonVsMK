@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <title>Pokemon X Street Fighter</title>
+   <link rel="stylesheet" href="style.css" type="text/css" ></link>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+<div id="container">
+   <header class="open">
+      <ul class="logos">
+         <li><img src="http://uk.tomy.com/sites/all/themes/pokemon_bw_uk/images/pokemon-logo.png" class="logo" id="pkmn-logo"></img></li>
+         <li> X </li>
+         <li><img src="http://vignette1.wikia.nocookie.net/cartoonfatness/images/a/ab/Mortal-Kombat-Logo.png/revision/latest?cb=20150403142416" class="logo" id="mk-logo"></img></li>
+      </ul>
+   </header>
+   <div class="health closed">
+      <div id="health1">Player One Charname</div>
+      <div id="health2">Player Two Charname</div>
+   </div>
+   <div id="arena">
+      <button id="start">FIGHT!</button>
+      <!-- visible during selection -->
+      <div id="character-select">
+         <!-- characters go here -->
+      </div>
+      <div id="card-render">
+         <!-- character info is pushed here when you hover over it -->
+      </div>
+      <!-- visible during gameplay -->
+      <div id="user">
+         <div class="user-card">
+         <!--  -->
+         </div>
+      </div>
+
+      <div id="comp">
+         <div class="user-card"></div>
+
+      </div>
+   </div>
+   <div id="deck">
+      <!-- your selected cards are here -->
+   </div>
+   <script src="pmk.js"></script>
+</div>
+</body>
+</html>

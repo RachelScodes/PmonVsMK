@@ -2,95 +2,55 @@ window.onload = function () {
   console.log("It's loaded!");
 
    //global scorekeeping variables
-   playerOne = true;
+   var playerOne = true;
+
+   //total back and forth turns:
+   var turnCount = 0;
+
+   //game on?
+   var gameOver = false;
 
    var doc = document;
 
-   var deck = {
-      pikachu: {
-         name: 'Pikachu',
-         avatar: ['http://www.pokemon-paradijs.com/animated-gifs/image/pikachu_rent2.gif', 'http://t02.deviantart.net/qIauUAAZi3LyEERUiqEMA0CKWN4=/fit-in/150x150/filters:no_upscale():origin()/pre15/a015/th/pre/f/2013/019/f/9/dead_pikachu_by_pickachua-d5s17w6.png', 'http://i1263.photobucket.com/albums/ii631/Pokemon-Vampire-Knight-lover/pikachu_.gif'],
-         attack1: ['ElectroCute', 4.5, 'Electric', 'http://orig15.deviantart.net/e860/f/2010/105/8/e/pikachu___volt_tackle_by_hanshumon.gif'], //, 'sound-src-url??'],
-         attack2: ['Pound', 4, 'Physical', 'http://urpgdex.monbrey.com.au/art/models/25-2.gif'], //, 'sound-src-url??'],
-         def: ['Defibrilator', 3.5, 'http://i634.photobucket.com/albums/uu68/coocoo406/moving_pikachu.gif'], //, 'sound-src-url??'],
-         accuracy: 7,
-         health: 60,
-         //winMsg: ['http://img06.deviantart.net/6dae/i/2011/030/1/7/pikacide_by_kid_viral-d38fbjk.jpg', ('I don'+'t know where you got that axe, but you win buddy! An ELECTRIC victory!')]
-      },
+   //import cards from deck.js
+   var deckObj = deckJS;
 
-      sindel: {
-         name: 'Sindel',
-         avatar: ['http://vignette3.wikia.nocookie.net/mortalkombat/images/9/93/Vs_sindel.gif/revision/latest?cb=20090917142727&path-prefix=es', 'http://www.theageofmammals.com/blogmedia/mk/sindel-falling.gif', 'http://bestanimations.com/Games/Computer/MortalCombat/Sindel/mortalkombatsindelanimation-3.gif'],
-         attack1: ['Scream', 4.5, 'Psychic', 'images/s-scream.gif'], //, 'sound-src-url??'],
-         attack2: ['Hair Whip', 4.5, 'Physical', 'images/s-whip.gif'], //, 'sound-src-url??'],
-         def: ['The Ring', 1.5, 'http://www.fightersgeneration.com/np2/char1/gifs/sindel-mk3-slip.gif'], //, 'sound-src-url??'],
-         accuracy: 8.5,
-         health: 70,
-      },
-
-      snorlax: {
-         name: 'Snorlax',
-         avatar: ['http://33.media.tumblr.com/e6a9f362751cdc95b3be52196ee66b2b/tumblr_mnalxua3us1rfjowdo1_500.gif', 'https://shadowdaleraven.files.wordpress.com/2013/03/snorlax.gif', 'http://orig07.deviantart.net/876e/f/2010/269/9/1/flying_snorlax_by_mrsquirrelz-d2zif7h.gif'],
-         attack1: ['Stomp', 5, 'Physical', 'http://orig08.deviantart.net/66ad/f/2013/039/d/f/143att2_by_joshr691-d5u9qir.gif'], //, 'sound-src-url??'],
-         attack2: ['Break Wind', 100, 'Toxic', 'http://i1014.photobucket.com/albums/af266/Nightslayer_321/Gifs/Snorlax-Rest_zpse7f40dd8.gif'], //, 'sound-src-url??'],
-         def: ['Sleep', 3, 'https://shadowdaleraven.files.wordpress.com/2013/03/snorlax.gif'], //, 'sound-src-url??'],
-         accuracy: 2,
-         health: 100,
-      },
-
-      scorpion: {
-         name: 'Scorpion',
-         avatar: ['http://33.media.tumblr.com/f0bd4e780fe86557675903070dffa2a3/tumblr_mhqa0bHAC31s0pq6co1_250.gif', 'http://i225.photobucket.com/albums/dd155/GM123456/Scorpion_3d_UMK3_stumble.gif', 'http://www.gifmagic.com/queue/scorpion_dancing_by_methados1_23687.gif'],
-         attack1: ['Spear', 4, 'Physical', 'ttp://orig12.deviantart.net/75fd/f/2013/099/8/0/gif_scorpion_get_over_here_animation_mk_by_luis_mortalkombat14-d6128nw.gif'], //, 'sound-src-url??'],
-         attack2: ['Hellfire Punch', 4.5, 'Fire', 'http://orig03.deviantart.net/06a8/f/2013/100/0/e/gif_scorpion_toasty_fatality_mk_by_luis_mortalkombat14-d6167ab.gif'], //, 'sound-src-url??'],
-         def: ['Flips and Stuff', 3, 'http://i225.photobucket.com/albums/dd155/GM123456/Scorpion_3d_UMK3_stumble.gif'], //, 'sound-src-url??'],
-         accuracy: 7,
-         health: 80,
-      }
-
-   };
-
-   var deckMax = 2;
-
-   $('#instructions2').detach();
-
-   if (!playerOne) {
-      $('#instructions2').appendTo($('.default'));
-      $('#instructions1').detach();
-      playerOne = true;
-   }
+   // max # of cards in player decks
+   var deckMax = 1 + 1; //+1 for button
 
    console.log('variables loaded ok');
 
-   console.log('startgame');
+
    //start game
+   console.log('startgame');
    (function() {
-     var start = $("#start");
-     var head = $("header");
-     var headStuff = $("#list");
-     var health = $(".health");
-
-     //when start button is clicked
-     start.click(function() {
-
-        //erase the start button
-        start.detach();
-
-        //roll back masthead,
-       if(head.hasClass('open')) {
-         head.removeClass('open');
-         head.addClass('closed');
-
-         //show healthbars
-         health.removeClass('closed');
-         health.addClass('open');
-         health.height('50px');
-         }
-      });
+   //   var start = $("#start");    //start button
+   //   var head = $("header");     //header div
+   //   var headStuff = $("#list"); //header contents
+   //   var health = $(".health");  //health bars
+     //
+   //   //when start button is clicked
+   //   start.click(function() {
+   //      makeSelectionThumbnails();
+     //
+   //      //erase the start button
+   //      start.detach();
+     //
+   //      //roll back masthead,
+   //     if(head.hasClass('open')) {
+   //       head.toggleClass('open', 'closed');
+     //
+   //       //show healthbars
+   //       health.height('50px');
+   //       health.toggleClass('closed', 'open');
+   //       }
+   //    });
 
       //show character select thumbnail screen
       //deck selection
-      function charThumbListScreen(){
+      function makeSelectionThumbnails(){
+         //initialize card-render area
+         $('#instructions2').hide()
 
          var container = $('#character-select');
          var charThumbList = doc.createElement('ul');
@@ -98,14 +58,15 @@ window.onload = function () {
 
          var inst = $('.default');
 
-         for (var i in deck) {
+         for (var i in deckObj) {
             var char = doc.createElement('li');
-            char.setAttribute('class', 'char-avatars');
-            char.setAttribute('value', deck[i].name);
-            $(char).css('background-image', 'url(' + deck[i].avatar[0] + ')');
+            char.setAttribute('class', 'char-avis');
+            char.setAttribute('value', deckObj[i].name);
+            $(char).css('background-image', 'url(' + deckObj[i].avatar[0] + ')');
             charThumbList.appendChild(char);
 
             //hover displays char stats in #card-render
+            //click moves choice to player deck.
             $(char).on({
                mouseenter: function() {
                   //change border on hover, like in MK
@@ -116,9 +77,9 @@ window.onload = function () {
                   }
                   //bind dom element to deck key
                   var charHov = $(this).attr('value').toLowerCase();
-                  var charObj = deck[charHov];
+                  var charObj = deckObj[charHov];
 
-                  //push elements from deck[value] to
+                  //push elements from deckObj[value] to
                   //receiving matching html divs
                   inst.detach();
 
@@ -129,124 +90,145 @@ window.onload = function () {
                   $(this).css('border', '3px solid black');
                   //restore render div to default
                   inst.prependTo($('#card-render'));
+               }, //end hover/char preview event
+
+               //click adds/removes charObjs from deck
+               //aka swap char choice before confirming
+               click: function() {
+
+                  //eo is event object
+                  eo = $(this).get(0);
+
+                  //if no deck, create deck
+                  var deckJQ = $('div#deck').length ? $('div#deck') : $('<div id="deck">');
+                  deckJS = $(deckJQ).get(0);
+
+                  //and add deck to arena, inside container.
+                  if (deckJS.parentElement !== $('div#arena').get(0)){
+                     $(deckJQ).appendTo($('#arena'));
+                  }//if deck is already there, then nothing.
+
+                  //if eo is currently in deck,
+                  //move it back to char select screen.
+                  if (eo.parentElement.id == 'deck') {
+                     $(eo).detach();
+                     $(eo).appendTo(charThumbList);
+                     $('.play-butt').detach();
+                  }
+
+                  //if card is not in deck, but deck
+                  //already has a card. no dice.
+                  else if (($('#deck').children().length >= deckMax ) && (eo.parentElement.id !== 'deck')){
+                  //else if ((!$('#deck').is(':empty')) && (eo.parentElement.id !== 'deck'))
+
+                  //TO-DO - refactor/update: pop over instructions?
+                     alert('Greedy! You can play as one character at a time!\n Click a character in your deck to remove it first,\n THEN you can choose another one.');
+                  }
+
+                  //if deck is empty and card is clicked
+                  //add it to the damned deck awready! lol
+                   else if ($('#deck').children().length < (deckMax - 1)) {
+                     //detach clicked char
+                     $(eo).detach();
+                     //add it to deck
+                     $(eo).appendTo($('#deck'));
+                  }
+                  //character has been selected, toggle
+                  confirmButton();
+
                }
+               //end char move click event
             });
-            //end hover/char preview event
-
-            //click adds/removes charObjs from deck
-            //aka swap char choice before confirming
-            $(char).click(function(){
-               //eo is event object
-               eo = $(this).get(0);
-
-               //if no deck, create deck
-               var deckJQ = $('div#deck').length ? $('div#deck') : $('<div id="deck">');
-               deckJS = $(deckJQ).get(0);
-
-               //and add deck to arena, inside container.
-               if (deckJS.parentElement !== 'div#arena'){
-                  $(deckJQ).appendTo($('#arena'));
-               }//if deck is already there, then nothing.
-
-               //if eo is currently in deck,
-               //move it back to char select screen.
-               if (eo.parentElement.id == 'deck') {
-                  $(eo).detach();
-                  $(eo).appendTo(charThumbList);
-               }
-
-               //if card is not in deck, but deck
-               //already has a card. no dice.
-               else if ((!$('#deck').is(':empty')) && (eo.parentElement.id !== 'deck')){
-
-               //TO-DO - refactor/update: pop over instructions?
-                  alert('Greedy! You can play as one character at a time!\n Click a character in your deck to remove it first,\n THEN you can choose another one.');
-               }
-
-               //if deck is empty and card is clicked
-               //add it to the damned deck awready! lol
-                else if ($('#deck').is(':empty')) {
-                  //detach clicked char
-                  $(eo).detach();
-                  //add it to deck
-                  $(eo).appendTo($('#deck'));
-               }
-               //character has been selected, toggle
-               togglePlayer();
-            });
-            //end char move click event
          }
-         //end charcter-select thumbnail screen creation
+         //end character-select thumbnail screen creation
 
          container.append(charThumbList);
-      };
+      }
 
-      charThumbListScreen();
 
-      function togglePlayer(){
+      makeSelectionThumbnails();
+
+      function confirmButton(){
          //Make buttons that CONFIRM character choice.
          //and switch player
-         for (var b = 2; b !== 0; b-=1) {
-            console.log(b);
-            debugger
-            var playButt = $('<button/>');
-            $(playButt).text('Player '+ b + ': CONFIRM');
-            $(playButt).attr('class', 'play-butt');
-            $(playButt).attr('id', 'playButt' + b);
+         var playButt = $('.play-butt').length ? $('.play-butt') : $('<button class="play-butt">');
 
-            $(playButt).click(function(){
-               //create new div for player hand
-               //switch who is selecting
-               var playerDeck = $('<div>');
-                  $(playerDeck).attr('class', 'player-deck');
-                  $(playerDeck).attr('id', function getDeckID(){
-                                          if (playerOne) { return 'deckOne' }
-                                          else { return 'deckTwo' }
-                                       });
+         if (playerOne){
+            $(playButt).text('Player One: CONFIRM');
+            $(playButt).attr('id', 'playButt1');
+         } else {
+            $(playButt).text('Player Two: CONFIRM');
+            $(playButt).attr('id', 'playButt2');
+         }
 
-               //move deck selection, into player's personal hand.
+         $(playButt).click(function(){
+            //selection is confirmed, player select switches
+            //move deck selection, into player's personal hand.
+            var selection = $("#deck").html();
+            var yourDeck = null;
+
+            if (playerOne) {
+               yourDeck = $('#deckOne').length ? $('#deckOne') : $('<div id="deckOne">');
+            } else {
+               yourDeck = $('#deckTwo').length ? $('#deckTwo') : $('<div id="deckTwo">');
+            }
+            //must make a selection to succeed.
+            if ($('#deck').children('.char-avis').length < (deckMax - 1)) {
+               alert('Your deck is empty! Choose a character!')
+            } else {
+               $(selection).detach();
+               $(yourDeck).append($(selection));
+               $(playButt).detach();
+               $('#deck').html(' ');
+
+               //toggle player and leave character select
                if (playerOne) {
-                  $("#deckOne").append($("#deck").html());
+                  $('#instructions2').show();
+                  $('#instructions1').hide();
+                  playerOne = !playerOne;
+                  $('#deck').css('background-color', 'beige');
                } else {
-                  $("#deckTwo").append($("#deck").html())
-               }
-
-               //selection is confirmed, player select switches
-               playerOne = !playerOne;
-
-            });
-            // CONFIRM button event end
-
-            //if deck has selections
-            //change bg to indicate player
-            //and attach buttons
-            if ($('#deck').html().length) {
-               if (playerOne) {
-                  $('#deck').css('background-color', 'indianred');
-                  $('#deck').append($('#playButt1'));
-               } else {
-                  $('#deck').css('background-color', 'cornflowerblue');
-                  $('#deck').append($('#playButt2'));
+                  debugger
+                  $('#character-select').hide();
+                  $('#deck').hide();
+                  playerOne = !playerOne;
+                  //startBattle();
                }
             }
+         });
+         // CONFIRM button click event end
 
+         //if deck has selections
+         //change bg to indicate player
+         //and attach buttons
+         if ($('#deck').html().length) {
+            if (playerOne) {
+               $('#deck').css('background-color', 'indianred');
+               $('#deck').append($(playButt));
+            } else {
+               $('#deck').css('background-color', 'cornflowerblue');
+               $('#deck').append($(playButt));
+            }
          }
          //end button creation and appending
 
-      };
-
-   })();
-     //end startgame
+      } //end confirmButton() maker
 
      console.log('it\'s all loaded!');
-};
+  })(); //end startgame anon func
+
+  function startBattle() {
+   //draw some stuff in the dom
+   //
+ }
+}
 //end onload
 
-function startBattle(){
-   //remove character select. and card render
-   $('#character-select').detach();
-   $('.card').each().detach();
-
-   //make battleground
-   $('<div>')
-}
+// function startBattle(){
+//    //remove character select. and card render
+//    $('#character-select').detach();
+//    $('.card').each().detach();
+//
+//    //make battleground
+//    $('<div>')
+// }

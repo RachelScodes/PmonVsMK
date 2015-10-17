@@ -4,6 +4,7 @@
    <meta charset="utf-8">
    <title>Pokemon X Street Fighter</title>
    <link rel="stylesheet" href="style.css" type="text/css" ></link>
+   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"></link>
    <script src="deck.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
    <script src="jquery.confirm-master/jquery.confirm.min.js"></script>
@@ -18,10 +19,8 @@
       </ul>
    </header>
    <div class="health closed">
-      <div id="health1">
-         Pikachu</div>
-      <div id="health2">
-         Sindell</div>
+      <div id="health1"></div>
+      <div id="health2"></div>
       <button id="confirm">CONFIRM</button>
       <button id="start">FIGHT!</button>
    </div>
@@ -74,16 +73,17 @@
    <!-- visible during gameplay -->
    <!-- visible during gameplay -->
    <!-- visible during gameplay -->
-      <div id="user">
-         <div class="user-card">
+      <div class="playerOne">
+         <div class="deckOne">
          <!--  -->
          </div>
       </div>
 
-      <div id="comp">
-         <div class="user-card"></div>
+      <div class=".playerTwo">
+         <div class="deckTwo"></div>
 
       </div>
+
    </div>
 </div>
 <script src="pmk.js"></script>

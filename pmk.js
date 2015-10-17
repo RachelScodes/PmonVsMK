@@ -24,27 +24,6 @@ window.onload = function () {
    //start game
    console.log('startgame');
    (function() {
-   //   var start = $("#start");    //start button
-   //   var head = $("header");     //header div
-   //   var headStuff = $("#list"); //header contents
-   //   var health = $(".health");  //health bars
-     //
-   //   //when start button is clicked
-   //   start.click(function() {
-   //      makeSelectionThumbnails();
-     //
-   //      //erase the start button
-   //      start.detach();
-     //
-   //      //roll back masthead,
-   //     if(head.hasClass('open')) {
-   //       head.toggleClass('open', 'closed');
-     //
-   //       //show healthbars
-   //       health.height('50px');
-   //       health.toggleClass('closed', 'open');
-   //       }
-   //    });
 
       //show character select thumbnail screen
       //deck selection
@@ -188,11 +167,8 @@ window.onload = function () {
                   playerOne = !playerOne;
                   $('#deck').css('background-color', 'beige');
                } else {
-                  debugger
-                  $('#character-select').hide();
-                  $('#deck').hide();
                   playerOne = !playerOne;
-                  //startBattle();
+                  startBattle();
                }
             }
          });
@@ -217,18 +193,54 @@ window.onload = function () {
      console.log('it\'s all loaded!');
   })(); //end startgame anon func
 
-  function startBattle() {
-   //draw some stuff in the dom
-   //
+  function startBattle(){
+     $('#deck').hide("fade");
+     $('#card-render').hide( "fade");
+     $('#character-select').toggle( "fold");
+     $('header').animate({
+           height: "+=500px",
+           lineHeight: "40px",
+           fontSize: "20px",
+        });
+      $('header').html('<br/>Now your decks are complete, choose your attacks wisely...<br/>IT\'S MORTAL KOMBAT!<br/>Click FIGHT! to begin!');
+      $('header').click(function(){
+          $('header').text('MORTAL KOMBAT!');
+          debugger
+          $('header').toggle( "clip" );
+          drawBattle();
+       });
+
+     //make battleground
+   function drawBattle(){
+      //draw two divs for cards
+      //populate with data from selected card
+      //
+   }
+     //start battle
+
  }
 }
 //end onload
 
-// function startBattle(){
-//    //remove character select. and card render
-//    $('#character-select').detach();
-//    $('.card').each().detach();
-//
-//    //make battleground
-//    $('<div>')
-// }
+
+//   var start = $("#start");    //start button
+//   var head = $("header");     //header div
+//   var headStuff = $("#list"); //header contents
+//   var health = $(".health");  //health bars
+  //
+//   //when start button is clicked
+//   start.click(function() {
+//      makeSelectionThumbnails();
+  //
+//      //erase the start button
+//      start.detach();
+  //
+//      //roll back masthead,
+//     if(head.hasClass('open')) {
+//       head.toggleClass('open', 'closed');
+  //
+//       //show healthbars
+//       health.height('50px');
+//       health.toggleClass('closed', 'open');
+//       }
+//    });

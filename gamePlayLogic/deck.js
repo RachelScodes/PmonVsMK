@@ -24,7 +24,7 @@ snorlax: {
    name: 'Snorlax',
    avatar: ['http://33.media.tumblr.com/e6a9f362751cdc95b3be52196ee66b2b/tumblr_mnalxua3us1rfjowdo1_500.gif'],
    attack1: ['Stomp', 5, 'Fighting', 'http://orig08.deviantart.net/66ad/f/2013/039/d/f/143att2_by_joshr691-d5u9qir.gif'], //, 'sound-src-url??'],
-   attack2: ['Break Wind', 100, 'Toxic', 'http://38.media.tumblr.com/tumblr_lqidfpulvF1qg0dcvo1_500.gif'], //, 'sound-src-url??'],
+   attack2: ['Break Wind', 50, 'Toxic', 'http://38.media.tumblr.com/tumblr_lqidfpulvF1qg0dcvo1_500.gif'], //, 'sound-src-url??'],
    def: ['Sleep', 10, 'Fighting', 'https://shadowdaleraven.files.wordpress.com/2013/03/snorlax.gif'], //, 'sound-src-url??'],
    accuracy: 2,
    health: 100,

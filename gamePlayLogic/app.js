@@ -1,6 +1,11 @@
+//import deck from deck.js
 var deck = deckObj;
+
+//total back and forth turns:
 var turnCount = 0;
-var gameOn = true;
+
+
+var gameOver = false;
 
 // playerDeck1 = [deck[card1], deck[card2]];
 // playerDeck2 = [deck[card3], deck[card4]];
@@ -17,7 +22,7 @@ var gameOn = true;
 var playerOne = true;
 
 var cardOne = deck.pikachu;
-var cardTwo = deck.scorpion;
+var cardTwo = deck.rachel;
 
 
 
@@ -56,12 +61,17 @@ var turn = function(){
    //then when confirmed, the turn starts
    //trigger on confirm of move
    //ASSIGN CLICK EVENT HERE!
-   var attackChoice = 'attack2';
+   var attackChoice = 'attack1';
 
    console.log('You chose: '+ yourCard[attackChoice][0] + ' as your attack!');
 
    //extrapolate variables from card.
-   var maxDamage = yourCard[attackChoice][1];
+   if (yourCard.name === 'Snorlax') {
+      var maxDamage = yourCard[attackChoice][1];
+   } else {
+      //balancing game
+      var maxDamage = (yourCard[attackChoice][1]) * 3;
+   }
    console.log('With a maximum damage of: '+ maxDamage + ',');
    var accuracy = yourCard.accuracy;
    console.log('And a ' + accuracy + ' in 10 chance of hitting that maximum.');
@@ -100,7 +110,6 @@ var turn = function(){
       }
       //you did not get max damage, what did you get?
       else {
-         console.log('Uh-oh, you missed! Your attack is weaker!');
          //if your accuracy is low, you have more chance
          //of missing, or doing less damage
          var hitOrMiss = (function() {
@@ -108,11 +117,11 @@ var turn = function(){
             if (accuracy < 4) {
                switch (d5()) {
                   case 5:
-                     raw = maxDamage / 2; //50%
+                     raw = maxDamage / 2; // 50%
                      console.log('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   case 4:
-                     raw = maxDamage / 4; //25%
+                     raw = maxDamage / 4; // 25%
                      console.log('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   default:
@@ -127,11 +136,11 @@ var turn = function(){
             else if (accuracy <=7 ) {
                switch (hitMax) {
                   case (accuracy+1) :
-                     raw = maxDamage / 2; //50 percent
+                     raw = maxDamage / 2; // 50 percent
                      console.log('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   case (accuracy+2) :
-                     raw = maxDamage / 4; //25 percent
+                     raw = maxDamage / 4; // 25 percent
                      console.log('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   default :
@@ -142,7 +151,7 @@ var turn = function(){
             }
 
             //if you're in the middle, you have a 1/3
-            //chance of either doing 50, 20, or 0% damage
+            //chance of either doing 50, 25, or 0% damage
             else {
                var rd3 = d3();
                switch (rd3) {
@@ -354,7 +363,6 @@ var turn = function(){
          console.log('Stop the in-fighting: there\'s no advantage to fighting your own kind!');
       }
       //amounts were small
-      total = total * 3;
       theirHealth = theirHealth - total;
       console.log('You dealt a total of '+ total + ' to your opponent.');
       console.log(theirCard.name + ' now has ' + theirHealth + ' HP.');
@@ -394,9 +402,9 @@ var turn = function(){
    }
       //assign enemy health to card.
    else {
-      console.log(yourCard.name + ' won! It only took you: ' + turnCount + ' turns...');
+      console.log(yourCard.name + ' won! It only took you: ' + (turnCount * 2) + ' turns...');
       console.log('Game over! Refresh!');
-      gameOn = false;
+      gameOver = true;
    }
 
    //end of turn.
@@ -410,7 +418,7 @@ var turn = function(){
 
 };
 
-while (gameOn) {
+while (!gameOver) {
    turn();
 }
    // function animate() {

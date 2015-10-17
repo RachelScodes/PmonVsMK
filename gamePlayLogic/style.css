@@ -45,7 +45,6 @@ li {
 #container {
    margin: 0 auto;
    /*background-image: url(http://vignette4.wikia.nocookie.net/fantendo/images/5/51/Pok%C3%A9mon_Stadium_2.jpg/revision/latest?cb=20141221100214);*/
-   background-image: url();
    background-position: center;
    background-attachment: fixed;
    max-width: 1080px;
@@ -72,11 +71,13 @@ header {
 }
 
 .health {
-   max-width: 1080px;
    display: block;
    margin: 0;
    padding: 0;
    overflow: hidden;
+
+   max-width: 1080px;
+
    font-size: 40px;
    color: ivory;
    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
@@ -125,7 +126,11 @@ header {
 #arena {
    margin-top: 30px;
    overflow: hidden;
-   overflow-y: scroll;
+   /*overflow-y: scroll;*/
+}
+
+.card {
+
 }
 
 #card-render {
@@ -161,7 +166,7 @@ header {
    display: inline-block;
 }
 
-.char-avis {
+.char-avatars {
    height: 50px;
    width: 50px;
    display: inline-block;
@@ -217,8 +222,32 @@ img.char-avatars {
    display: inline-block;
    float: right;
    position: relative;
+   top: 0;
    margin: 15px;
    height: 50px;
    width: 100px;
-   z-index: 20;
 }
+
+.deckOne,
+.deckTwo
+
+
+/*
+old health bars
+#health1 {
+   max-width: 42.5%;
+   height: 200px;
+   background-color: red;
+   background: -webkit-gradient(linear, left top, right top, from(black), to(indianred));
+   background: -webkit-linear-gradient(left, black, indianred);
+   float: left;
+}
+
+#health2 {
+   max-width: 42.5%;
+   height: 200px;
+   background-color: blue;
+   background: -webkit-gradient(linear, right top, left top, from(black), to(cornflowerblue));
+   background: -webkit-linear-gradient(right, black, cornflowerblue);
+   float: right;
+}*/

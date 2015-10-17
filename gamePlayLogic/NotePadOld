@@ -25,6 +25,21 @@ line 86 of html:
 //show game commands
 //TBD
 
+// hitting between a certain hp amount
+// write down what happens for each attack.
+// attack was  damage, i could have had this amount
+//
+// max only happens 1/5
+
+// test variables
+// var maxDamage = card[chosenattack][]
+// var accuracy = 7;
+// var yourType = ['fire', 'water', 'electric', 'ground', 'psychic'];
+// var theirType = yourType.sort();
+//
+// var yourHealth = 100;
+// var theirHealth = 100;
+
 
 
 

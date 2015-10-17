@@ -16,7 +16,7 @@ var gameOver = false;
    // attack2: [name, maxDam, type, pic],
    // def: [name, maxRegen, type, pic],
    // accuracy: #/10,
-   // health: #/100,
+   // health: #/100
 // }
 
 var playerOne = true;

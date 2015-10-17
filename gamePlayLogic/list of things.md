@@ -7,9 +7,7 @@
 |------------|---------------------------|--------|-------|----------|----|
 | container | div - holds all game elements, used to space other containers    | body   | header, arena, footer, etc | n/a | n/a
 | header | div - holds loading screen - animates up to reveal board. | #container | #logos, timer, start button? | n/a | n/a |
-header   
-   hold start logo, and loading logo.        .open/closed - visible/not
-   start.on(click) = rolls up to begin game;
+|header | hold start logo, and loading logo. | #container  .open/closed - visible/not | start.on(click) = rolls up to begin game;
 |  |  |  |  |  |  |
 |  |  |  |  |  |  |
 |  |  |  |  |  |  |
@@ -32,12 +30,14 @@ header
 |.health  | holds health bars  |  |  |  |  |
 |#health1  | player 1 health div  |  |  |  |  |
 |health2 |  player 2 health div |
-|.default | holds instructions, covers card render, hides on hover over avi |
 |#arena| holds game, including: char select, card-renders, deck renders |
+|#character-select | div, holds the list of avis for character selection |
+|#card-render | holds preview of card on hover over avi, or instructions by default |
+|#card-hover | displays character data when mouseover avatar|
+|.default | holds instructions, covers card render, hides on hover over avi |
 |.card | unassigned |
-|#card-render | holds preview of card on hover over avi |
 |#card-hover
-
+|#deck|holds player deck selections|
 
 
 ##list of jav variables

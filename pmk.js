@@ -10,6 +10,9 @@ window.onload = function () {
    var yourCard = '';                     // var playerOneWins: 0;
    var theirCard = '';                    // var playerTwoWins: 0;
 
+   var health1 = $('#health1');
+   var health2 = $('#health2');
+
    // max # of cards in player decks      //total back and forth turns:
    var deckMax = 1;                       var turnCount = 0;
 
@@ -244,11 +247,11 @@ window.onload = function () {
          if (playerOne) {
             setClass = 'playerOne';
             charObj = player1choice;
-            healthBar = $('#health1');
+            healthBar = health1;
          } else {
             setClass = 'playerTwo';
             charObj = player2choice;
-            healthBar = $('#health2');
+            healthBar = health2;
          }
 
          //place specific values into generic ones
@@ -297,7 +300,6 @@ window.onload = function () {
                   theirCard = player2choice;
 
                   //click registers attack, and animates cards
-                  animatePic(yourCard, this.id, theirCard);
                   turn(this, yourCard, theirCard);
                } else if (!playerOne && (this.className === "playerTwo")) {
                   $(this).css('border', '5px double cornflowerblue');
@@ -307,7 +309,6 @@ window.onload = function () {
                   theirCard = player1choice;
 
                   //click registers attack, and animates cards
-                  animatePic(yourCard, this.id, theirCard);
                   turn(this, yourCard, theirCard);
                } else {
                   if (playerOne) {
@@ -346,7 +347,6 @@ window.onload = function () {
                   theirCard = player2choice;
 
                   //click registers attack, and animates cards
-                  animatePic(yourCard, this.id, theirCard);
                   turn(this, yourCard, theirCard);
                } else if (!playerOne && (this.className === "playerTwo")) {
                   $(this).css('border', '5px double cornflowerblue');
@@ -356,7 +356,6 @@ window.onload = function () {
                   theirCard = player1choice;
 
                   //click registers attack, and animates cards
-                  animatePic(yourCard, this.id, theirCard);
                   turn(this, yourCard, theirCard);
                } else {
                   if (playerOne) {
@@ -414,19 +413,42 @@ window.onload = function () {
 
    function turn(attackChoice, yourCard, theirCard){
       //get stats from card
+      debugger
       attackChoice = attackChoice.id;
       var maxDamage = yourCard[attackChoice][1];
       var accuracy = yourCard.accuracy;
 
       //multiply 4x for pixel proportions
       if (yourCard.name === 'Snorlax') {
-         maxDamage = maxDamage * 4;
+         maxDamage = maxDamage;
       } else {
          //multiply 3x to balance
-         maxDamage = maxDamage * 12;
+         maxDamage = maxDamage * 3;
       }
 
-      var theirHealth = theirCard.health * 4;
+      //animate avatar changes
+      debugger
+      var yourNewPic = yourCard[attackChoice][3];
+      var theirNewPic = theirCard.def[3];
+
+      if (playerOne) {
+         yourOldPic = $('img#avi-preview.playerOne');
+         theirOldPic = $('img#avi-preview.playerTwo');
+      } else {
+         yourOldPic = $('img#avi-preview.playerTwo');
+         theirOldPic = $('img#avi-preview.playerOne');
+      }
+
+      $(yourOldPic).css('background-image', 'url(' + yourNewPic + ')');
+      $(theirOldPic).css('background-image', 'url(' + theirNewPic + ')');
+
+      // function changeBack(yourOldPic, theirOldPic, yourCard, theirCard) {
+      //    $(yourOldPic).css('background-image', 'url(' + yourCard.avatar[0] +')');
+      //    $(theirOldPic).css('background-image', 'url(' + theirCard.avatar[0] +')');
+      // }
+
+
+      var theirHealth = theirCard.health;
 
       //roll to calculate raw damage
       function rawDmg() {
@@ -514,6 +536,7 @@ window.onload = function () {
       function totalDmg(){
          var yourType = yourCard[attackChoice][2];
          var theirType = theirCard.def[2];
+         var theirHealthBar = '';
 
          var total = rawDmg();
 
@@ -697,20 +720,28 @@ window.onload = function () {
          }
          //amounts were small
          theirHealth = theirHealth - total;
-         $('header').text('You dealt a total of '+ total + ' to your opponent.');
-         $('header').text(theirCard.name + ' now has ' + (theirHealth / 4) + ' HP.');
 
          if (playerOne) {
-            $('#health2').animate({
-               width: '-= total',
-            });
+            debugger
+            theirHealthBar = health2;
+            theirCardHealth = $('p#health.playerTwo').children($('span#highlight')).get(0);
+         } else {
+            theirHealthBar = health1;
+            theirCardHealth = $('p#health.playerOne').children($('span#highlight')).get(0);
          }
-         else {
-            $('#health1').animate({
-               width: '-= total',
-            })
+         $('header').text('You hit your opponent for '+ total + ' HP!');
+
+         //animate health bars
+         var newHBwidth = ($(theirHealthBar).width() - (total * 4)) + 'px';
+         theirHealthBar.animate({
+            width: newHBwidth,
+         });
+
+         $('header').text(theirCard.name + ' now has ' + theirHealth + ' HP.');
+         $(theirCardHealth).text(theirHealth);
+
          }
-      }
+
       //end of offensive roll
       totalDmg();
 
@@ -741,7 +772,6 @@ window.onload = function () {
          };
          //end regen roll
          rollRegen();
-         theirCard.health = theirHealth;
       }
          //assign enemy health to card.
       else {
@@ -751,47 +781,15 @@ window.onload = function () {
       }
 
       //end of turn.
+      //changeBack();
       playerOne = !playerOne;
+      if (playerOne) {
+         $('header').text('Player One: CHOOSE YOUR ATTACK!');
+      } else {
+         $('header').text('Player Two: CHOOSE YOUR ATTACK!');
+      }
 
       turnCount = turnCount + .5;
-
-   };
-
-   function animatePic(yourCard, attackchoice, theirCard){
-      var yourOldPic = '';
-      var theirOldPic = '';
-      var yourNewPic = yourCard[attackchoice][3];
-      var theirNewPic = theirCard.def[3];
-
-      debugger
-      if (playerOne) {
-         yourOldPic = $('img#avi-preview.playerOne');
-         theirOldPic = $('img#avi-preview.playerTwo');
-      } else {
-         yourOldPic = $('img#avi-preview.playerTwo');
-         theirOldPic = $('img#avi-preview.playerOne');
-      }
-
-      $(yourOldPic).css('background-image', 'url(' + yourNewPic + ')');
-      $(theirOldPic).css('background-image', 'url(' + theirNewPic + ')');
-
-      window.setTimeout(changeBack(yourOldPic, theirOldPic, yourCard, theirCard), 3000);
-
-      function changeBack(yourOldPic, theirOldPic, yourCard, theirCard){
-         $(yourOldPic).css('background-image', 'url(' + yourCard.avatar[0] +')');
-         $(theirOldPic).css('background-image', 'url(' + theirCard.avatar[0] +')');
-      }
-
    }
-
-
-
-
-
-
-
-
-
-
 
 }//end onload

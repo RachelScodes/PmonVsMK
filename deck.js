@@ -12,8 +12,8 @@ var deckJS = {
 
 sindel: {
    name: 'Sindel',
-   avatar: ['images/sindel-avi.gif', 'images/sindel-falling.gif', 'images/sindel-fatality.gif'],
-   attack1: ['Scream', 4.5, 'Psychic', 'images/sindel-scream3D.gif'], //, 'sound-src-url??'],
+   avatar: ['images/sindel-scream3D.gif', 'images/sindel-falling.gif', 'images/sindel-fatality.gif'],
+   attack1: ['Scream', 4.5, 'Psychic', 'images/sindel-avi.gif'], //, 'sound-src-url??'],
    attack2: ['Hair Whip', 4.5, 'Fighting', 'images/sindel-whip.gif'], //, 'sound-src-url??'],
    def: ['The Ring', 1.5, 'Psychic', 'images/sindel-running.gif'], //, 'sound-src-url??'],
    accuracy: 8.5,

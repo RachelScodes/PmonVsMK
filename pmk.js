@@ -1,44 +1,33 @@
 window.onload = function () {
-  console.log("It's loaded!");
-   $('#card-hover').hide();
-   //import cards from deck.js
-   var deckObj = deckJS;
 
-   //global scorekeeping variables
-   var playerOne = true;
-   var yourCard = '';
-   var theirCard = '';
+   $('#card-hover').hide(); //hide the card-preview area.
 
-   //total back and forth turns:
-   var turnCount = 0;
+   var deckObj = deckJS; //import cards from deck.js
+   var doc = document; //DOM shortcut
 
-   //game on?
-   var gameOver = false;
+   //global scorekeeping variables         //game on?
+   var playerOne = true;                  var gameOver = false;
+   var yourCard = '';                     // var playerOneWins: 0;
+   var theirCard = '';                    // var playerTwoWins: 0;
 
-   var doc = document;
+   // max # of cards in player decks      //total back and forth turns:
+   var deckMax = 1;                       var turnCount = 0;
 
-   // max # of cards in player decks
-   var deckMax = 1 + 1; //+1 for button
-
-   console.log('variables loaded ok');
-
-
-   //start game
-   console.log('startgame');
-   (function() {
+   //start game! pick cards!
+   function chooseYourCards() {
 
       //show character select thumbnail screen
-      //deck selection
       function makeSelectionThumbnails(){
-         //initialize card-render area
-         $('#instructions2').hide();
 
+         var inst = $('.card#instr'); //instruction card-area
+         $('#instructions2').hide(); //playerOne starts
+
+         //draw containers for character list
          var container = $('#character-select');
          var charThumbList = doc.createElement('ul');
          charThumbList.id = "char-thumbnail-ul";
 
-         var inst = $('.card#instr');
-
+         //draw character-select thumbnails
          for (var i in deckObj) {
             var char = doc.createElement('li');
             char.setAttribute('class', 'char-avis');
@@ -62,9 +51,8 @@ window.onload = function () {
 
                   inst.hide();
                   $('#card-hover').show();
-                  //push elements from deckObj[value] to
-                  //receiving matching html divs
-                  //tldr: pushing the stats from the object into the dom
+
+                  //pushing the stats from charObject into #card-hover
                   $('#char-name').html(charObj.name);
                   $('#avi-preview').eq(0).css('background-image', 'url(' + charObj.avatar[2] + ')');
                   $('p#health').html('Health: <span id="highlight">' + charObj.health + '</span> HP <span class="right"><span id="accuracy">');
@@ -74,15 +62,14 @@ window.onload = function () {
                   $('p#defense').html('Defense move: <span id="highlight">' + charObj.def[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.def[2] + '</span></span>');
                },
                mouseleave: function() {
-
                   $(this).css('border', '3px solid black');
                   //restore render div to default
                   $('#card-hover').hide();
                   inst.show();
                }, //end hover/char preview event
 
-               //click adds/removes charObjs from deck
-               //aka swap char choice before confirming
+               //click adds/removes characters from deck,
+               //user can swap char choice before confirming
                click: function() {
 
                   //eo is event object
@@ -105,41 +92,37 @@ window.onload = function () {
                      $('.play-butt').detach();
                   }
 
-                  //if card is not in deck, but deck
-                  //already has a card. no dice.
-                  else if (($('#deck').children().length >= deckMax ) && (eo.parentElement.id !== 'deck')){
-                  //else if ((!$('#deck').is(':empty')) && (eo.parentElement.id !== 'deck'))
-
-                  //TO-DO - refactor/update: pop over instructions?
+                  //don't move a card into a full deck.
+                  else if (($('#deck').children('li.char-avis').length === deckMax ) && (eo.parentElement.id !== 'deck')){
+                     //TO-DO - refactor/update: pop over instructions?
                      alert('Greedy! You can play as one character at a time!\n Click a character in your deck to remove it first,\n THEN you can choose another one.');
                   }
 
-                  //if deck is empty and card is clicked
-                  //add it to the damned deck awready! lol
-                   else if ($('#deck').children().length < (deckMax - 1)) {
-                     //detach clicked char
-                     $(eo).detach();
-                     //add it to deck
-                     $(eo).appendTo($('#deck'));
+                  //add card to the damned deck awready! lol
+                   else if ($('#deck').children('li.char-avis').length < deckMax) {
+                     $(eo).detach(); //detach clicked char
+                     $(eo).appendTo($('#deck')); //add it to deck
                   }
-                  //character has been selected, toggle
+                  //character has been selected; confirm choice.
                   confirmButton();
 
-               }
-               //end char move click event
-            });
-         }
-         //end character-select thumbnail screen creation
+               } //end char move click event
+            }); //end all mouse event definitions
+         } //end thumbnail creation for loop
 
+         //all thumbnails generated, add list to screen.
          container.append(charThumbList);
-      }
+
+      } //end character-select thumbnail screen creation
       makeSelectionThumbnails();
 
+      //Make button that CONFIRMS character choice and switches player
       function confirmButton(){
-         //Make button that CONFIRMS character choice.
-         //and switch player
+
+         //fetch the button. if no button exists, create one
          var playButt = $('.play-butt').length ? $('.play-butt') : $('<button class="play-butt">');
 
+         //what goes in the button depends on whose turn it is.
          if (playerOne){
             $(playButt).text('Player One: CONFIRM');
             $(playButt).attr('id', 'playButt1');
@@ -147,12 +130,13 @@ window.onload = function () {
             $(playButt).text('Player Two: CONFIRM');
             $(playButt).attr('id', 'playButt2');
          }
-
+         //what does the button do?
          $(playButt).click(function(){
             //selection is confirmed, player select switches
             //move deck selection, into player's personal hand.
-            var yourDeck = null;
+            var yourDeck = 'empty';
 
+            //fetch or make individual decks for players
             if (playerOne) {
                yourDeck = $('#deckOne').length ? $('#deckOne') : $('<div id="deckOne">');
             } else {
@@ -161,27 +145,33 @@ window.onload = function () {
             yourDeck.addClass('playerDeck');
             yourDeck.appendTo('#arena');
             yourDeck.hide();
-            //must make a selection to succeed.
-            if ($('#deck').children('.char-avis').length < (deckMax - 1)) {
-               alert('Your deck is empty! Choose a character!')
-            } else {
-               $(playButt).detach();
-               $(yourDeck).append($("#deck").html());
-               $('#deck').html(' ');
 
-               //toggle player and leave character select
+            //can't confirm if the deck isn't full.
+            if ($('#deck').children('li.char-avis').length < deckMax) {
+               alert('Your deck is not at the max yet, choose some characters!');
+            }
+
+            //if deck is full
+            else {
+               $(playButt).detach(); //detach button
+               $(yourDeck).append($("#deck").html()); //add contents to player hand
+               $('#deck').html(' '); //clear the deck, no repeats.
+
+               //toggle player
                if (playerOne) {
+                  //change instructions to match player
                   $('#instructions2').show();
                   $('#instructions1').hide();
-                  playerOne = !playerOne;
                   $('#deck').css('background-color', 'beige');
+                  playerOne = !playerOne;
                } else {
                   playerOne = !playerOne;
+
+                  //it's fighting time!
                   startBattle();
                }
             }
-         });
-         // CONFIRM button click event end
+         });// CONFIRM button click event end
 
          //if deck has selections
          //change bg to indicate player
@@ -194,32 +184,40 @@ window.onload = function () {
                $('#deck').css('background-color', 'cornflowerblue');
                $('#deck').append($(playButt));
             }
-         }
-         //end button creation and appending
-
+         } //end button creation and appending
       } //end confirmButton() maker
+   }; //end chooseYourCards
+   chooseYourCards();
 
-  })(); //end startgame anon func
+   function startBattle(){
+      //hide all the things!
+      $('#deck').hide("fade");
+      $('#card-render').hide( "fade");
+      $('#character-select').toggle( "fold");
+      $('header').animate({
+         height: "+=500px",
+         lineHeight: "40px",
+         fontSize: "20px",
+         });
 
-  function startBattle(){
-     $('#deck').hide("fade");
-     $('#card-render').hide( "fade");
-     $('#character-select').toggle( "fold");
-     $('header').animate({
-           height: "+=500px",
-           lineHeight: "40px",
-           fontSize: "20px",
-        });
-     $('header').html('<br/>Now your decks are complete, choose your attacks wisely...<br/>IT\'S MORTAL KOMBAT!<br/>Click FIGHT! to begin!');
-     $('header').click(function(){
-       $('header').text('MORTAL KOMBAT!');
-       $('header').toggle( "clip" );
-       drawBattle();
-       });
-  }
+      //let users know what happens next
+      $('header').html('<br/>Now your decks are complete, choose your attacks wisely...<br/>IT\'S MORTAL KOMBAT!<br/>Click this screen to begin!');
 
-     //make battleground
+      //when header is clicked, battle starts.
+      $('header').click(function(){
+         $('header').text('&nbsp');
+         $('header').animate({
+            height: "50px";
+            background-color: none;
+         });
+         $('header').off('click');
+         drawBattle();
+      }); //end header click event
+   } //end startBattle()
+
+   //make battleground
    function drawBattle(){
+
       //draw two divs for cards/decks
       //populate with data from selected card
       //for now, automatic to first choice
@@ -232,12 +230,13 @@ window.onload = function () {
       player2choice = player2choice.getAttribute('value').toLowerCase();
       player2choice = deckObj[player2choice];
 
-      var playerScreen = null;
-      var setClass = '';
+      var playerScreen = 'unknown';
+      var setClass = 'unknown';
 
       for (var i = 0; i<2; i++){
          playerScreen = $('<div>');
 
+         //whose info goes in the card?
          if (playerOne) {
             setClass = 'playerOne';
             charObj = player1choice;
@@ -248,22 +247,30 @@ window.onload = function () {
             healthBar = $('#health2');
          }
 
+         //place specific values into generic ones
          $(playerScreen).attr('class', setClass);
          $(playerScreen).attr('value', charObj);
+
+         //automatically style card
          $(playerScreen).addClass('card');
 
+         //display character choice
          var cardName = $('<h1>')
          $(cardName).attr('id', 'char-name').text(charObj.name);
          $(playerScreen).append(cardName);
 
+         //display default avatar
          var cardPic = $('<img>')
          $(cardPic).attr('id', 'avi-preview').css('background-image', 'url(' + charObj.avatar[0] + ')');
          $(playerScreen).append(cardPic);
 
+         //show starting health
          var cardHealthAcc = $('<p>')
          $(cardHealthAcc).attr('id', 'health').html('Health: <span id="highlight">' + charObj.health + '</span> HP <span class="right"><span id="accuracy"><span id="highlight">' + charObj.accuracy + '</span>/10 Accuracy</span></span>');
          $(playerScreen).append(cardHealthAcc);
 
+         //clickable/selectable attacks
+         //attack number 1
          var cardAtt1 = $('<p>')
          $(cardAtt1).attr('id', 'attack1').html('Attack 1: <span id="highlight">' + charObj.attack1[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack1[2] + '</span></span>');
          cardAtt1.on({
@@ -272,37 +279,49 @@ window.onload = function () {
                   $(this).css('border', '3px solid indianred');
                } else if (!playerOne && (this.className === "playerTwo")) {
                   $(this).css('border', '3px solid cornflowerblue');
-               } else {
-                  //nothing
                }
-            },
+            }, //highlight matches current player
             mouseleave: function() {
                $(this).css('border', 'none');
             },
-            click: function(){
-               if (playerOne && (this.className === "playerOne")) {
-                  $(this).css('border', '5px double indianred');
-                  yourCard = player1choice;
-                  theirCard = player2choice;
-                  confirmAttack(this, yourCard, theirCard);
-               } else if (!playerOne && (this.className === "playerTwo")) {
-                  $(this).css('border', '5px double cornflowerblue');
-                  yourCard = player2choice;
-                  theirCard = player1choice;
-                  confirmAttack(this, yourCard, theirCard);
+            click: function attackSelected();
+         });
+
+         function attackSelected(attackDiv){
+            console.log(this);
+            debugger
+            if (playerOne && (this.className === "playerOne")) {
+               $(this).css('border', '5px double indianred');
+
+               //pass parameters into turn and animate functions
+               yourCard = player1choice;
+               theirCard = player2choice;
+
+               //click registers attack, and animates cards
+               turn(this, yourCard, theirCard);
+               animate(yourCard, this.id, theirCard);
+            } else if (!playerOne && (this.className === "playerTwo")) {
+               $(this).css('border', '5px double cornflowerblue');
+
+               //pass parameters into turn and animate functions
+               yourCard = player2choice;
+               theirCard = player1choice;
+
+               //click registers attack, and animates cards
+               turn(this, yourCard, theirCard);
+               animate(yourCard, this.id, theirCard);
+            } else {
+               if (playerOne) {
+                  alert('Player One: Choose your attack!');
                } else {
-                  if (playerOne) {
-                     alert('Player One: Choose your attack!');
-                  } else {
-                     alert('Player Two: Choose your attack!');
-                  }
+                  alert('Player Two: Choose your attack!');
                }
             }
+         }
 
-         });
          $(playerScreen).append(cardAtt1);
 
-
+         //attack number 2
          var cardAtt2 = $('<p>')
          $(cardAtt2).attr('id', 'attack2').html('Attack 2: <span id="highlight">' + charObj.attack2[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack2[2] + '</span></span>');
          cardAtt2.on({
@@ -318,26 +337,26 @@ window.onload = function () {
             mouseleave: function() {
                $(this).css('border', 'none');
             },
-            click: function(){
-               if (playerOne && (this.className === "playerOne")) {
-                  $(this).css('border', '5px double indianred');
-                  confirmAttack(this, yourCard, theirCard);
-               } else if (!playerOne && (this.className === "playerTwo")) {
-                  $(this).css('border', '5px double cornflowerblue');
-                  confirmAttack(this, yourCard, theirCard);
-
-               } else {
-                  if (playerOne) {
-                     alert('Player One: Choose your attack!');
-                  } else {
-                     alert('Player Two: Choose your attack!');
-                  }
-               }
-            }
-
+            click: attackSelected(this);
+            // function(){
+            //    if (playerOne && (this.className === "playerOne")) {
+            //       $(this).css('border', '5px double indianred');
+            //       turn(this, yourCard, theirCard);
+            //       animate(yourCard, this.id, theirCard);
+            //    } else if (!playerOne && (this.className === "playerTwo")) {
+            //       $(this).css('border', '5px double cornflowerblue');
+            //       turn(this, yourCard, this.id, theirCard);
+            //
+            //    } else {
+            //       if (playerOne) {
+            //          alert('Player One: Choose your attack!');
+            //       } else {
+            //          alert('Player Two: Choose your attack!');
+            //       }
+            //    }
+            // }
          });
          $(playerScreen).append(cardAtt2);
-
 
          var cardDef = $('<p>')
          $(cardDef).attr('id', 'defense').html('Defense move: <span id="highlight">' + charObj.def[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.def[2] + '</span></span>');
@@ -350,10 +369,10 @@ window.onload = function () {
                lineHeight: "40px",
                fontSize: "20px",
             });
-         var healthwidth = player1choice.health * 4;
+         var healthStartWidth = (player1choice.health * 4) + 'px';
          $(healthBar).animate({
-            width: healthwidth + 'px',
-         });
+            width: healthStartWidth,
+         }, "slow");
          $(healthBar).text(charObj.name);
 
          $('#arena').prepend(playerScreen);
@@ -380,7 +399,7 @@ window.onload = function () {
 
 
 
-   function confirmAttack(attackChoice, yourCard, theirCard){
+   function turn(attackChoice, yourCard, theirCard){
       debugger
       //get stats from card
       attackChoice = attackChoice.id;
@@ -670,6 +689,7 @@ window.onload = function () {
          console.log(theirCard.name + ' now has ' + theirHealth + ' HP.');
 
          if (playerOne) {
+            debugger
             $('#health2').animate({
                width: '-= total',
             });
@@ -726,17 +746,41 @@ window.onload = function () {
 
    };
 
+   function animate(yourCard, attackchoice, theirCard){
+      var yourOldPic = '';
+      var theirOldPic = '';
+      var yourNewPic = yourCard[attackchoice][3];
+      var theirNewPic = theirCard.def[3];
+
+
+      if (!playerOne) {
+         yourOldPic = $('img#avi-preview.playerOne');
+         theirOldPic = $('img#avi-preview.playerTwo');
+      } else {
+         yourOldPic = $('img#avi-preview.playerTwo');
+         theirOldPic = $('img#avi-preview.playerOne');
+      }
+
+      $(yourOldPic).css('background-image', 'url(' + yourNewPic + ')');
+      $(theirOldPic).css('background-image', 'url(' + theirNewPic + ')');
+
+      window.setTimeout(changeBack(yourOldPic, theirOldPic, yourCard, theirCard), 3000);
+
+      function changeBack(yourOldPic, theirOldPic, yourCard, theirCard){
+         $(yourOldPic).css('background-image', 'url(' + yourCard.avatar[0] +')');
+         $(theirOldPic).css('background-image', 'url(' + theirCard.avatar[0] +')');
+      }
+
+   }
+
+
+
+
+
+
+
+
+
+
 
 }//end onload
-
-function animate(){
-   yourCard.children('')
-   function changeImagesBack() {
-  timeoutID = window.setTimeout(slowAlert, 2000);
-  button click is back on
-}
-
-function slowAlert() {
-  alert("That was really slow!");
-}
-}

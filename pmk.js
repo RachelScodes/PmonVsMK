@@ -15,6 +15,8 @@ window.onload = function () {
 
    //start game! pick cards!
    function chooseYourCards() {
+      //TO-DO expand header as loading screen.
+      $('header').css('background-color', 'white');
 
       //show character select thumbnail screen
       function makeSelectionThumbnails(){
@@ -91,7 +93,6 @@ window.onload = function () {
                      $(eo).appendTo(charThumbList);
                      $('.play-butt').detach();
                   }
-
                   //don't move a card into a full deck.
                   else if (($('#deck').children('li.char-avis').length === deckMax ) && (eo.parentElement.id !== 'deck')){
                      //TO-DO - refactor/update: pop over instructions?
@@ -205,11 +206,14 @@ window.onload = function () {
 
       //when header is clicked, battle starts.
       $('header').click(function(){
-         $('header').text('&nbsp');
+         $('header').removeAttr('style').css('background-color');
+         $('header').css('color', 'white');
+         $('header').text(' ');
          $('header').animate({
-            height: "50px";
-            background-color: none;
+            height: "60px",
+            backgroundColor: 'rgba(0, 0, 0, 0)',
          });
+
          $('header').off('click');
          drawBattle();
       }); //end header click event
@@ -240,7 +244,7 @@ window.onload = function () {
          if (playerOne) {
             setClass = 'playerOne';
             charObj = player1choice;
-            healthBar = $('#health1')
+            healthBar = $('#health1');
          } else {
             setClass = 'playerTwo';
             charObj = player2choice;
@@ -284,40 +288,36 @@ window.onload = function () {
             mouseleave: function() {
                $(this).css('border', 'none');
             },
-            click: function attackSelected();
-         });
+            click: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '5px double indianred');
 
-         function attackSelected(attackDiv){
-            console.log(this);
-            debugger
-            if (playerOne && (this.className === "playerOne")) {
-               $(this).css('border', '5px double indianred');
+                  //pass parameters into turn and animate functions
+                  yourCard = player1choice;
+                  theirCard = player2choice;
 
-               //pass parameters into turn and animate functions
-               yourCard = player1choice;
-               theirCard = player2choice;
+                  //click registers attack, and animates cards
+                  animatePic(yourCard, this.id, theirCard);
+                  turn(this, yourCard, theirCard);
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '5px double cornflowerblue');
 
-               //click registers attack, and animates cards
-               turn(this, yourCard, theirCard);
-               animate(yourCard, this.id, theirCard);
-            } else if (!playerOne && (this.className === "playerTwo")) {
-               $(this).css('border', '5px double cornflowerblue');
+                  //pass parameters into turn and animate functions
+                  yourCard = player2choice;
+                  theirCard = player1choice;
 
-               //pass parameters into turn and animate functions
-               yourCard = player2choice;
-               theirCard = player1choice;
-
-               //click registers attack, and animates cards
-               turn(this, yourCard, theirCard);
-               animate(yourCard, this.id, theirCard);
-            } else {
-               if (playerOne) {
-                  alert('Player One: Choose your attack!');
+                  //click registers attack, and animates cards
+                  animatePic(yourCard, this.id, theirCard);
+                  turn(this, yourCard, theirCard);
                } else {
-                  alert('Player Two: Choose your attack!');
+                  if (playerOne) {
+                     alert('Player One: Choose your attack!');
+                  } else {
+                     alert('Player Two: Choose your attack!');
+                  }
                }
             }
-         }
+         });
 
          $(playerScreen).append(cardAtt1);
 
@@ -337,24 +337,35 @@ window.onload = function () {
             mouseleave: function() {
                $(this).css('border', 'none');
             },
-            click: attackSelected(this);
-            // function(){
-            //    if (playerOne && (this.className === "playerOne")) {
-            //       $(this).css('border', '5px double indianred');
-            //       turn(this, yourCard, theirCard);
-            //       animate(yourCard, this.id, theirCard);
-            //    } else if (!playerOne && (this.className === "playerTwo")) {
-            //       $(this).css('border', '5px double cornflowerblue');
-            //       turn(this, yourCard, this.id, theirCard);
-            //
-            //    } else {
-            //       if (playerOne) {
-            //          alert('Player One: Choose your attack!');
-            //       } else {
-            //          alert('Player Two: Choose your attack!');
-            //       }
-            //    }
-            // }
+            click: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '5px double indianred');
+
+                  //pass parameters into turn and animate functions
+                  yourCard = player1choice;
+                  theirCard = player2choice;
+
+                  //click registers attack, and animates cards
+                  animatePic(yourCard, this.id, theirCard);
+                  turn(this, yourCard, theirCard);
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '5px double cornflowerblue');
+
+                  //pass parameters into turn and animate functions
+                  yourCard = player2choice;
+                  theirCard = player1choice;
+
+                  //click registers attack, and animates cards
+                  animatePic(yourCard, this.id, theirCard);
+                  turn(this, yourCard, theirCard);
+               } else {
+                  if (playerOne) {
+                     alert('Player One: Choose your attack!');
+                  } else {
+                     alert('Player Two: Choose your attack!');
+                  }
+               }
+            }
          });
          $(playerScreen).append(cardAtt2);
 
@@ -362,45 +373,46 @@ window.onload = function () {
          $(cardDef).attr('id', 'defense').html('Defense move: <span id="highlight">' + charObj.def[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.def[2] + '</span></span>');
          $(playerScreen).append(cardDef);
 
+         //give all card attributes the className of their player
          $(playerScreen).children().attr('class', setClass);
 
+         //draw health bars
          $('.health').animate({
-               height: "+=50px",
-               lineHeight: "40px",
-               fontSize: "20px",
+               height: "+=50px"
             });
-         var healthStartWidth = (player1choice.health * 4) + 'px';
+
+         //base width on character health, multiplied for good pixel ratio
+         var healthStartWidth = (charObj.health * 4) + 'px';
          $(healthBar).animate({
             width: healthStartWidth,
          }, "slow");
+
+         //whose health is this?
          $(healthBar).text(charObj.name);
 
+         //add card on top of decks
          $('#arena').prepend(playerScreen);
 
-         //
+         playerOne = !playerOne; //toggle player
+      } //end card drawing
 
-         playerOne = !playerOne;
-      }
-
+      //show players deck choices
       $('#deckOne').show();
       $('#deckTwo').show();
-   }
+   } //end drawBattle()
 
-   //LETS THROW SOME DICE MOTHAF*CKA!
+   //LETS THROW SOME DICE MOTHAF*CKAAAA!
    function d10(){
       return Math.ceil(Math.random()*10);
    }
-   function d5() {
-      return Math.ceil(Math.random()*5);
-   }
+   function d6() {
+      return Math.ceil(Math.random()*6);
+   } //FLY LIKE A D-6!!
    function d3() {
       return Math.ceil(Math.random()*3);
    }
 
-
-
    function turn(attackChoice, yourCard, theirCard){
-      debugger
       //get stats from card
       attackChoice = attackChoice.id;
       var maxDamage = yourCard[attackChoice][1];
@@ -434,18 +446,18 @@ window.onload = function () {
             var hitOrMiss = (function() {
 
                if (accuracy < 4) {
-                  switch (d5()) {
-                     case 5:
+                  switch (d6()) {
+                     case 6:
                         raw = maxDamage / 2; // 50%
-                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
                         break;
-                     case 4:
+                     case 5:
                         raw = maxDamage / 4; // 25%
-                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
                         break;
                      default:
                         raw = 0;
-                        console.log('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                        $('header').text('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
                         break;
                   }
                }
@@ -456,15 +468,15 @@ window.onload = function () {
                   switch (hitMax) {
                      case (accuracy+1) :
                         raw = maxDamage / 2; // 50 percent
-                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
                         break;
                      case (accuracy+2) :
                         raw = maxDamage / 4; // 25 percent
-                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
                         break;
                      default :
                         raw = 0; //none
-                        console.log('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                        $('header').text('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
                         break;
                   }
                }
@@ -477,15 +489,15 @@ window.onload = function () {
 
                      case 1:
                         raw = 0; // 0%
-                        console.log('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                        $('header').text('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
                         break;
                      case 2:
                         raw = maxDamage / 4; // 25%
-                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
                         break;
                      default :
                         raw = maxDamage / 2; // 50%
-                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
                         break;
                   }
                }
@@ -506,7 +518,7 @@ window.onload = function () {
          var total = rawDmg();
 
          //different types have strengths/weaknesses
-         console.log('Let\'s see how ' + yourType+' stacks up against ' + theirType+'...');
+         $('header').text('Let\'s see how ' + yourType+' stacks up against ' + theirType+'...');
          if (yourType !== theirType){
             switch (yourType) {
                case ('Fire'):
@@ -514,21 +526,21 @@ window.onload = function () {
                         //STRONG
                         case ('Psychic') :
                            total = total * 2; //double damage
-                           console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                           $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                            break;
                         //WEAK
                         case ('Water') :
                            total = total / 2; //half damage
-                           console.log('Yikes! ' + yourType + ' isn\'t super effective against ' + theirType + '.\nYour attack is weakened!');
+                           $('header').text('Yikes! ' + yourType + ' isn\'t super effective against ' + theirType + '.\nYour attack is weakened!');
                            break;
                         case ('Ground') :
                            total = total / 2;
-                           console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                           $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                            break;
                         //NO EFFECT
                         default :
                            total = total; //no effect
-                           console.log('Eh, no advantage, but no disadvantage either.');
+                           $('header').text('Eh, no advantage, but no disadvantage either.');
                            break;
                         }
                         break;
@@ -538,25 +550,25 @@ window.onload = function () {
                      //STRONG
                      case ('Water') :
                         total = total * 2; //double damage
-                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                         break;
                      case ('Psychic') :
                         total = total * 2; //double damage
-                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                         break;
                      //WEAK
                      case ('Fire') :
                         total = total / 2; //half damage
-                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                         break;
                      case ('Ground') :
                         total = total / 2;
-                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                         break;
                      //NO EFFECT
                      default :
                         total = total; //no effect
-                        console.log('Eh, no advantage, but no disadvantage either.');
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
                         break;
                      }
                      break;
@@ -566,25 +578,25 @@ window.onload = function () {
                      //STRONG
                      case ('Fire') :
                         total = total * 2; //double damage
-                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                         break;
                      case ('Ground') :
                         total = total * 2; //double damage
-                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                         break;
                      //WEAK
                      case ('Electric') :
                         total = total / 2; //half damage
-                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                         break;
                      case ('Toxic') :
                         total = total / 2;
-                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                         break;
                      //NO EFFECT
                      default :
                         total = total; //no effect
-                        console.log('Eh, no advantage, but no disadvantage either.');
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
                         break;
                      }
                      break;
@@ -594,21 +606,21 @@ window.onload = function () {
                      //STRONG
                      case ('Toxic') :
                         total = total * 2; //double damage
-                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                         break;
                      //WEAK
                      case ('Psychic') :
                         total = total / 2; //half damage
-                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                         break;
                      case ('Water') :
                         total = total / 2;
-                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                         break;
                      //NO EFFECT
                      default :
                         total = total; //no effect
-                        console.log('Eh, no advantage, but no disadvantage either.');
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
                         break;
                      }
                      break;
@@ -618,17 +630,17 @@ window.onload = function () {
                      //WEAK
                      case ('Water') :
                         total = total / 2; //half damage
-                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                         break;
                      //NO EFFECT
                      case ('Fighting') :
                         total = total; //no effect
-                        console.log('Eh, no advantage, but no disadvantage either.');
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
                         break;
                      //TOXIC IS OP SON!
                      default :
                         total = total * 2; //double damage
-                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                         break;
                      }
                      break;
@@ -638,21 +650,21 @@ window.onload = function () {
                      //STRONG
                      case ('Electric') :
                         total = total * 2; //double damage
-                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                         break;
                      case ('Fire') :
                         total = total * 2; //double damage
-                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                         break;
                      //WEAK
                      case ('Water') :
                         total = total / 2;
-                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                         break;
                      //NO EFFECT
                      default :
                         total = total; //no effect
-                        console.log('Eh, no advantage, but no disadvantage either.');
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
                         break;
                      }
                      break;
@@ -662,17 +674,17 @@ window.onload = function () {
                      //STRONG
                      case ('Fighting') :
                         total = total * 2; //double damage
-                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                         break;
                      //WEAK
                      case ('Ground') :
                         total = total / 2;
-                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                         break;
                      //NO EFFECT
                      default :
                         total = total; //no effect
-                        console.log('Eh, no advantage, but no disadvantage either.');
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
                         break;
                      }
                      break;
@@ -681,15 +693,14 @@ window.onload = function () {
          }
          // if same type, no effect
          else if (yourType === theirType) {
-            console.log('Stop the in-fighting: there\'s no advantage to fighting your own kind!');
+            $('header').text('Stop the in-fighting: there\'s no advantage to fighting your own kind!');
          }
          //amounts were small
          theirHealth = theirHealth - total;
-         console.log('You dealt a total of '+ total + ' to your opponent.');
-         console.log(theirCard.name + ' now has ' + theirHealth + ' HP.');
+         $('header').text('You dealt a total of '+ total + ' to your opponent.');
+         $('header').text(theirCard.name + ' now has ' + (theirHealth / 4) + ' HP.');
 
          if (playerOne) {
-            debugger
             $('#health2').animate({
                width: '-= total',
             });
@@ -707,7 +718,7 @@ window.onload = function () {
       //NO ZOMBIES!
       if (theirHealth > 0) {
       //ok, they aren't dead...yet. Regenerate!
-      console.log('Uh-oh, your opponent has a chance to heal!');
+      $('header').text('Uh-oh, your opponent has a chance to heal!');
          var rollRegen = function() {
             //accuracy also determines if your defense
             //has a chance to heal.
@@ -717,14 +728,14 @@ window.onload = function () {
             var regAcc = theirCard.accuracy;
             var regRoll = d10();
 
-            if (regRoll <= accuracy) {
+            if ((regRoll <= accuracy) && (theirCard.name !== 'Snorlax')) {
                theirHealth = theirHealth + regen;
-               console.log(theirCard.name + ' healed for: ' + regen + ' HP!');
+               $('header').text(theirCard.name + ' healed for: ' + regen + ' HP!');
             } else if (theirCard.name == 'Snorlax'){
                theirHealth = theirHealth + regen;
-               console.log('Snorlax took a nap and healed for: ' + regen + ' HP!');
+               $('header').text('Snorlax took a nap and healed for: ' + regen + ' HP!');
             } else {
-               console.log('Whew! No regeneration this time!');
+               $('header').text('Whew! No regeneration this time!');
             }
             return regen;
          };
@@ -734,8 +745,8 @@ window.onload = function () {
       }
          //assign enemy health to card.
       else {
-         console.log(yourCard.name + ' won! It only took you: ' + (turnCount * 2) + ' turns...');
-         console.log('Game over! Refresh!');
+         $('header').text(yourCard.name + ' won! It only took you: ' + (turnCount * 2) + ' turns...');
+         $('header').text('Game over! Refresh!');
          gameOver = true;
       }
 
@@ -746,14 +757,14 @@ window.onload = function () {
 
    };
 
-   function animate(yourCard, attackchoice, theirCard){
+   function animatePic(yourCard, attackchoice, theirCard){
       var yourOldPic = '';
       var theirOldPic = '';
       var yourNewPic = yourCard[attackchoice][3];
       var theirNewPic = theirCard.def[3];
 
-
-      if (!playerOne) {
+      debugger
+      if (playerOne) {
          yourOldPic = $('img#avi-preview.playerOne');
          theirOldPic = $('img#avi-preview.playerTwo');
       } else {

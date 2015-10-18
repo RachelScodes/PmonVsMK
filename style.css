@@ -274,3 +274,13 @@ div.playerTwo,
    clear: both;
    display: inline-block;
 }
+
+.blood {
+   display: block;
+   float: left;
+   position: relative;
+   background-size: cover;
+   width: inherit;
+   height: inherit;
+   z-index: 1000;
+}

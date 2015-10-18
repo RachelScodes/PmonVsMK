@@ -5,6 +5,10 @@ window.onload = function () {
    var deckObj = deckJS; //import cards from deck.js
    var doc = document; //DOM shortcut
 
+   //make SFX department
+   var bloodGif = $('<div>').addClass('blood');
+   bloodGif = $(bloodGif).css('background-image', 'url(images/blood-drip.gif)');
+
    //global scorekeeping variables         //game on?
    var playerOne = true;                  var gameOver = false;
    var yourCard = '';                     // var playerOneWins: 0;
@@ -267,7 +271,7 @@ window.onload = function () {
          $(playerScreen).append(cardName);
 
          //display default avatar
-         var cardPic = $('<img>')
+         var cardPic = $('<div>')
          $(cardPic).attr('id', 'avi-preview').css('background-image', 'url(' + charObj.avatar[0] + ')');
          $(playerScreen).append(cardPic);
 
@@ -413,12 +417,10 @@ window.onload = function () {
 
    function turn(attackChoice, yourCard, theirCard){
       //get stats from card
-      debugger
       attackChoice = attackChoice.id;
       var maxDamage = yourCard[attackChoice][1];
       var accuracy = yourCard.accuracy;
 
-      //multiply 4x for pixel proportions
       if (yourCard.name === 'Snorlax') {
          maxDamage = maxDamage;
       } else {
@@ -432,21 +434,17 @@ window.onload = function () {
       var theirNewPic = theirCard.def[3];
 
       if (playerOne) {
-         yourOldPic = $('img#avi-preview.playerOne');
-         theirOldPic = $('img#avi-preview.playerTwo');
+         yourOldPic = $('div#avi-preview.playerOne');
+         theirOldPic = $('div#avi-preview.playerTwo');
       } else {
-         yourOldPic = $('img#avi-preview.playerTwo');
-         theirOldPic = $('img#avi-preview.playerOne');
+         yourOldPic = $('div#avi-preview.playerTwo');
+         theirOldPic = $('div#avi-preview.playerOne');
       }
 
       $(yourOldPic).css('background-image', 'url(' + yourNewPic + ')');
       $(theirOldPic).css('background-image', 'url(' + theirNewPic + ')');
-
-      // function changeBack(yourOldPic, theirOldPic, yourCard, theirCard) {
-      //    $(yourOldPic).css('background-image', 'url(' + yourCard.avatar[0] +')');
-      //    $(theirOldPic).css('background-image', 'url(' + theirCard.avatar[0] +')');
-      // }
-
+      $(theirOldPic).prepend(bloodGif);
+      debugger
 
       var theirHealth = theirCard.health;
 
@@ -722,7 +720,6 @@ window.onload = function () {
          theirHealth = theirHealth - total;
 
          if (playerOne) {
-            debugger
             theirHealthBar = health2;
             theirCardHealth = $('p#health.playerTwo').children($('span#highlight')).get(0);
          } else {
@@ -772,8 +769,7 @@ window.onload = function () {
          };
          //end regen roll
          rollRegen();
-      }
-         //assign enemy health to card.
+      }//assign enemy health to card.
       else {
          $('header').text(yourCard.name + ' won! It only took you: ' + (turnCount * 2) + ' turns...');
          $('header').text('Game over! Refresh!');
@@ -781,7 +777,12 @@ window.onload = function () {
       }
 
       //end of turn.
-      //changeBack();
+
+      //reset avatars
+      $(yourOldPic).css('background-image', 'url(' + yourCard.avatar[0] +')');
+      $(theirOldPic).css('background-image', 'url(' + theirCard.avatar[0] +')');
+      $(bloodGif).detach();
+
       playerOne = !playerOne;
       if (playerOne) {
          $('header').text('Player One: CHOOSE YOUR ATTACK!');

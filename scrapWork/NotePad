@@ -29,6 +29,38 @@ line 86 of html:
 
 
 ------------------------------------------------------------------
+****CODE FOR LATER****
+------------------------------------------------------------------
+
+
+var cardName = $('<h1>')
+$(cardName).attr('id', 'char-name').text('Character Name:');
+$(playerScreen).append(cardName);
+
+var cardPic = $('<img>')
+$(cardPic).attr('id', 'avi-preview');
+$(playerScreen).append(cardPic);
+
+var cardHealthAcc = $('<p>')
+$(cardHealthAcc).attr('id', 'health').text('Health/Accuracy:');
+$(playerScreen).append(cardHealthAcc);
+
+var cardAtt1 = $('<p>')
+$(cardAtt1).attr('id', 'attack1').text('Attack 1:');
+$(playerScreen).append(cardAtt1);
+
+var cardAtt2 = $('<p>')
+$(cardAtt2).attr('id', 'attack2').text('Attack 2:');
+$(playerScreen).append(cardAtt2);
+
+var cardDef = $('<p>')
+$(cardDef).attr('id', 'defense').text('Defense:');
+$(playerScreen).append(cardDef);
+
+
+
+
+------------------------------------------------------------------
 ****POKE LOGOS****
 ------------------------------------------------------------------
 

@@ -1,5 +1,6 @@
 window.onload = function () {
   console.log("It's loaded!");
+   $('#card-hover').hide();
 
    //global scorekeeping variables
    var playerOne = true;
@@ -35,7 +36,7 @@ window.onload = function () {
          var charThumbList = doc.createElement('ul');
          charThumbList.id = "char-thumbnail-ul";
 
-         var inst = $('.default');
+         var inst = $('.card#instr');
 
          for (var i in deckObj) {
             var char = doc.createElement('li');
@@ -58,10 +59,10 @@ window.onload = function () {
                   var charHov = $(this).attr('value').toLowerCase();
                   var charObj = deckObj[charHov];
 
+                  inst.hide();
+                  $('#card-hover').show();
                   //push elements from deckObj[value] to
                   //receiving matching html divs
-                  inst.detach();
-
                   //tldr: pushing the stats from the object into the dom
                   $('#char-name').html(charObj.name);
                   $('#avi-preview').eq(0).css('background-image', 'url(' + charObj.avatar[2] + ')');
@@ -72,9 +73,11 @@ window.onload = function () {
                   $('p#defense').html('Defense move: <span id="highlight">' + charObj.def[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.def[2] + '</span></span>');
                },
                mouseleave: function() {
+
                   $(this).css('border', '3px solid black');
                   //restore render div to default
-                  inst.prependTo($('#card-render'));
+                  $('#card-hover').hide();
+                  inst.show();
                }, //end hover/char preview event
 
                //click adds/removes charObjs from deck
@@ -149,7 +152,6 @@ window.onload = function () {
          $(playButt).click(function(){
             //selection is confirmed, player select switches
             //move deck selection, into player's personal hand.
-            var selection = $("#deck").html();
             var yourDeck = null;
 
             if (playerOne) {
@@ -157,13 +159,15 @@ window.onload = function () {
             } else {
                yourDeck = $('#deckTwo').length ? $('#deckTwo') : $('<div id="deckTwo">');
             }
+            yourDeck.addClass('playerDeck');
+            yourDeck.appendTo('#arena');
+            yourDeck.hide();
             //must make a selection to succeed.
             if ($('#deck').children('.char-avis').length < (deckMax - 1)) {
                alert('Your deck is empty! Choose a character!')
             } else {
-               $(selection).detach();
-               $(yourDeck).append($(selection));
                $(playButt).detach();
+               $(yourDeck).append($("#deck").html());
                $('#deck').html(' ');
 
                //toggle player and leave character select
@@ -211,18 +215,90 @@ window.onload = function () {
       $('header').html('<br/>Now your decks are complete, choose your attacks wisely...<br/>IT\'S MORTAL KOMBAT!<br/>Click FIGHT! to begin!');
       $('header').click(function(){
           $('header').text('MORTAL KOMBAT!');
-          debugger
           $('header').toggle( "clip" );
           drawBattle();
        });
 
      //make battleground
    function drawBattle(){
-      //draw two divs for cards
+      //draw two divs for cards/decks
       //populate with data from selected card
-      //
+      //for now, automatic to first choice
+      var player1choice = deckObj[$('#deckOne').children().get(0);
+      player1choice = player1choice.getAttribute('value').toLowerCase();
+      var player2choice = deckObj[$('#deckTwo').children().get(0);
+      player2choice = player2choice.getAttribute('value').toLowerCase();
+
+      var playerScreen = null;
+      var setClass = '';
+
+      for (var i = 0; i<2; i++){
+         playerScreen = $('<div>');
+         if (playerOne) {
+            setClass = 'playerOne';
+            charObj = deckObj[player1choice];
+         } else {
+            setClass = 'playerTwo';
+            charObj = deckObj[player2choice];
+         }
+         $(playerScreen).attr('class', setClass);
+         $(playerScreen).addClass('card');
+
+         var cardName = $('<h1>')
+         $(cardName).attr('id', 'char-name').text(charObj.name);
+         $(playerScreen).append(cardName);
+
+         var cardPic = $('<img>')
+         $(cardPic).attr('id', 'avi-preview').css('background-image', 'url(' + charObj.avatar[2] + ')');
+         $(playerScreen).append(cardPic);
+
+         var cardHealthAcc = $('<p>')
+         $(cardHealthAcc).attr('id', 'health').html('Health: <span id="highlight">' + charObj.health + '</span> HP <span class="right"><span id="accuracy"><span id="highlight">' + charObj.accuracy + '</span>/10 Accuracy</span></span>');
+         $(playerScreen).append(cardHealthAcc);
+
+         var cardAtt1 = $('<p>')
+         $(cardAtt1).attr('id', 'attack1').html('Attack 1: <span id="highlight">' + charObj.attack1[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack1[2] + '</span></span>');
+         cardAtt1.on(
+            mouseenter:
+
+            mouseleave:
+
+            click:
+         )
+         $(playerScreen).append(cardAtt1);
+
+
+         var cardAtt2 = $('<p>')
+         $(cardAtt2).attr('id', 'attack2').html('Attack 2: <span id="highlight">' + charObj.attack2[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack2[2] + '</span></span>');
+         cardAtt2.on(
+            mouseenter:
+
+            mouseleave:
+
+            click:
+         )
+         $(playerScreen).append(cardAtt2);
+
+
+         var cardDef = $('<p>')
+         $(cardDef).attr('id', 'defense').html('Defense move: <span id="highlight">' + charObj.def[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.def[2] + '</span></span>');
+         $(playerScreen).append(cardDef);
+
+         $(playerScreen).children().attr('class', setClass);
+
+         $('#arena').prepend(playerScreen);
+
+         //
+
+         playerOne = !playerOne;
+      }
+      $('#deckOne').show();
+      $('#deckTwo').show();
+
+   //start battle
+
+     }
    }
-     //start battle
 
  }
 }

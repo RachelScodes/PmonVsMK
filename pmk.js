@@ -1,9 +1,13 @@
 window.onload = function () {
   console.log("It's loaded!");
    $('#card-hover').hide();
+   //import cards from deck.js
+   var deckObj = deckJS;
 
    //global scorekeeping variables
    var playerOne = true;
+   var yourCard = '';
+   var theirCard = '';
 
    //total back and forth turns:
    var turnCount = 0;
@@ -12,9 +16,6 @@ window.onload = function () {
    var gameOver = false;
 
    var doc = document;
-
-   //import cards from deck.js
-   var deckObj = deckJS;
 
    // max # of cards in player decks
    var deckMax = 1 + 1; //+1 for button
@@ -132,12 +133,10 @@ window.onload = function () {
 
          container.append(charThumbList);
       }
-
-
       makeSelectionThumbnails();
 
       function confirmButton(){
-         //Make buttons that CONFIRM character choice.
+         //Make button that CONFIRMS character choice.
          //and switch player
          var playButt = $('.play-butt').length ? $('.play-butt') : $('<button class="play-butt">');
 
@@ -200,7 +199,6 @@ window.onload = function () {
 
       } //end confirmButton() maker
 
-     console.log('it\'s all loaded!');
   })(); //end startgame anon func
 
   function startBattle(){
@@ -212,36 +210,46 @@ window.onload = function () {
            lineHeight: "40px",
            fontSize: "20px",
         });
-      $('header').html('<br/>Now your decks are complete, choose your attacks wisely...<br/>IT\'S MORTAL KOMBAT!<br/>Click FIGHT! to begin!');
-      $('header').click(function(){
-          $('header').text('MORTAL KOMBAT!');
-          $('header').toggle( "clip" );
-          drawBattle();
+     $('header').html('<br/>Now your decks are complete, choose your attacks wisely...<br/>IT\'S MORTAL KOMBAT!<br/>Click FIGHT! to begin!');
+     $('header').click(function(){
+       $('header').text('MORTAL KOMBAT!');
+       $('header').toggle( "clip" );
+       drawBattle();
        });
+  }
 
      //make battleground
    function drawBattle(){
       //draw two divs for cards/decks
       //populate with data from selected card
       //for now, automatic to first choice
-      var player1choice = deckObj[$('#deckOne').children().get(0);
+
+      var player1choice = $('#deckOne').children().get(0);
       player1choice = player1choice.getAttribute('value').toLowerCase();
-      var player2choice = deckObj[$('#deckTwo').children().get(0);
+      player1choice = deckObj[player1choice];
+
+      var player2choice = $('#deckTwo').children().get(0);
       player2choice = player2choice.getAttribute('value').toLowerCase();
+      player2choice = deckObj[player2choice];
 
       var playerScreen = null;
       var setClass = '';
 
       for (var i = 0; i<2; i++){
          playerScreen = $('<div>');
+
          if (playerOne) {
             setClass = 'playerOne';
-            charObj = deckObj[player1choice];
+            charObj = player1choice;
+            healthBar = $('#health1')
          } else {
             setClass = 'playerTwo';
-            charObj = deckObj[player2choice];
+            charObj = player2choice;
+            healthBar = $('#health2');
          }
+
          $(playerScreen).attr('class', setClass);
+         $(playerScreen).attr('value', charObj);
          $(playerScreen).addClass('card');
 
          var cardName = $('<h1>')
@@ -249,7 +257,7 @@ window.onload = function () {
          $(playerScreen).append(cardName);
 
          var cardPic = $('<img>')
-         $(cardPic).attr('id', 'avi-preview').css('background-image', 'url(' + charObj.avatar[2] + ')');
+         $(cardPic).attr('id', 'avi-preview').css('background-image', 'url(' + charObj.avatar[0] + ')');
          $(playerScreen).append(cardPic);
 
          var cardHealthAcc = $('<p>')
@@ -258,25 +266,76 @@ window.onload = function () {
 
          var cardAtt1 = $('<p>')
          $(cardAtt1).attr('id', 'attack1').html('Attack 1: <span id="highlight">' + charObj.attack1[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack1[2] + '</span></span>');
-         cardAtt1.on(
-            mouseenter:
+         cardAtt1.on({
+            mouseover: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '3px solid indianred');
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '3px solid cornflowerblue');
+               } else {
+                  //nothing
+               }
+            },
+            mouseleave: function() {
+               $(this).css('border', 'none');
+            },
+            click: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '5px double indianred');
+                  yourCard = player1choice;
+                  theirCard = player2choice;
+                  confirmAttack(this, yourCard, theirCard);
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '5px double cornflowerblue');
+                  yourCard = player2choice;
+                  theirCard = player1choice;
+                  confirmAttack(this, yourCard, theirCard);
+               } else {
+                  if (playerOne) {
+                     alert('Player One: Choose your attack!');
+                  } else {
+                     alert('Player Two: Choose your attack!');
+                  }
+               }
+            }
 
-            mouseleave:
-
-            click:
-         )
+         });
          $(playerScreen).append(cardAtt1);
 
 
          var cardAtt2 = $('<p>')
          $(cardAtt2).attr('id', 'attack2').html('Attack 2: <span id="highlight">' + charObj.attack2[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack2[2] + '</span></span>');
-         cardAtt2.on(
-            mouseenter:
+         cardAtt2.on({
+            mouseover: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '3px solid indianred');
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '3px solid cornflowerblue');
+               } else {
+                  //nothing
+               }
+            },
+            mouseleave: function() {
+               $(this).css('border', 'none');
+            },
+            click: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '5px double indianred');
+                  confirmAttack(this, yourCard, theirCard);
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '5px double cornflowerblue');
+                  confirmAttack(this, yourCard, theirCard);
 
-            mouseleave:
+               } else {
+                  if (playerOne) {
+                     alert('Player One: Choose your attack!');
+                  } else {
+                     alert('Player Two: Choose your attack!');
+                  }
+               }
+            }
 
-            click:
-         )
+         });
          $(playerScreen).append(cardAtt2);
 
 
@@ -286,43 +345,398 @@ window.onload = function () {
 
          $(playerScreen).children().attr('class', setClass);
 
+         $('.health').animate({
+               height: "+=50px",
+               lineHeight: "40px",
+               fontSize: "20px",
+            });
+         var healthwidth = player1choice.health * 4;
+         $(healthBar).animate({
+            width: healthwidth + 'px',
+         });
+         $(healthBar).text(charObj.name);
+
          $('#arena').prepend(playerScreen);
 
          //
 
          playerOne = !playerOne;
       }
+
       $('#deckOne').show();
       $('#deckTwo').show();
-
-   //start battle
-
-     }
    }
 
- }
+   //LETS THROW SOME DICE MOTHAF*CKA!
+   function d10(){
+      return Math.ceil(Math.random()*10);
+   }
+   function d5() {
+      return Math.ceil(Math.random()*5);
+   }
+   function d3() {
+      return Math.ceil(Math.random()*3);
+   }
+
+
+
+   function confirmAttack(attackChoice, yourCard, theirCard){
+      debugger
+      //get stats from card
+      attackChoice = attackChoice.id;
+      var maxDamage = yourCard[attackChoice][1];
+      var accuracy = yourCard.accuracy;
+
+      //multiply 4x for pixel proportions
+      if (yourCard.name === 'Snorlax') {
+         maxDamage = maxDamage * 4;
+      } else {
+         //multiply 3x to balance
+         maxDamage = maxDamage * 12;
+      }
+
+      var theirHealth = theirCard.health * 4;
+
+      //roll to calculate raw damage
+      function rawDmg() {
+         //start of roll
+         var raw = 0;
+         //roll dice to see if you got max
+         var hitMax = d10();
+
+         if (hitMax <= accuracy) {
+            raw = maxDamage;
+
+         }
+         //you did not get max damage, what did you get?
+         else {
+            //if your accuracy is low, you have more chance
+            //of missing, or doing less damage
+            var hitOrMiss = (function() {
+
+               if (accuracy < 4) {
+                  switch (d5()) {
+                     case 5:
+                        raw = maxDamage / 2; // 50%
+                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     case 4:
+                        raw = maxDamage / 4; // 25%
+                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     default:
+                        raw = 0;
+                        console.log('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                        break;
+                  }
+               }
+
+               //the better your character's accuracy
+               //the less likely you'll miss or do less damage
+               else if (accuracy <=7 ) {
+                  switch (hitMax) {
+                     case (accuracy+1) :
+                        raw = maxDamage / 2; // 50 percent
+                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     case (accuracy+2) :
+                        raw = maxDamage / 4; // 25 percent
+                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     default :
+                        raw = 0; //none
+                        console.log('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                        break;
+                  }
+               }
+
+               //if you're in the middle, you have a 1/3
+               //chance of either doing 50, 25, or 0% damage
+               else {
+                  var rd3 = d3();
+                  switch (rd3) {
+
+                     case 1:
+                        raw = 0; // 0%
+                        console.log('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                        break;
+                     case 2:
+                        raw = maxDamage / 4; // 25%
+                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     default :
+                        raw = maxDamage / 2; // 50%
+                        console.log('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                  }
+               }
+            })();
+            //end of damage calculation
+
+         }
+         //end of else
+         return raw;
+
+         }
+      //end of raw damage dice roll
+
+      function totalDmg(){
+         var yourType = yourCard[attackChoice][2];
+         var theirType = theirCard.def[2];
+
+         var total = rawDmg();
+
+         //different types have strengths/weaknesses
+         console.log('Let\'s see how ' + yourType+' stacks up against ' + theirType+'...');
+         if (yourType !== theirType){
+            switch (yourType) {
+               case ('Fire'):
+                     switch (theirType) {
+                        //STRONG
+                        case ('Psychic') :
+                           total = total * 2; //double damage
+                           console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                           break;
+                        //WEAK
+                        case ('Water') :
+                           total = total / 2; //half damage
+                           console.log('Yikes! ' + yourType + ' isn\'t super effective against ' + theirType + '.\nYour attack is weakened!');
+                           break;
+                        case ('Ground') :
+                           total = total / 2;
+                           console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                           break;
+                        //NO EFFECT
+                        default :
+                           total = total; //no effect
+                           console.log('Eh, no advantage, but no disadvantage either.');
+                           break;
+                        }
+                        break;
+
+               case ('Electric'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Water') :
+                        total = total * 2; //double damage
+                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     case ('Psychic') :
+                        total = total * 2; //double damage
+                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Fire') :
+                        total = total / 2; //half damage
+                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     case ('Ground') :
+                        total = total / 2;
+                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        console.log('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+               case ('Water'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Fire') :
+                        total = total * 2; //double damage
+                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     case ('Ground') :
+                        total = total * 2; //double damage
+                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Electric') :
+                        total = total / 2; //half damage
+                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     case ('Toxic') :
+                        total = total / 2;
+                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        console.log('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+               case ('Fighting'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Toxic') :
+                        total = total * 2; //double damage
+                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Psychic') :
+                        total = total / 2; //half damage
+                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     case ('Water') :
+                        total = total / 2;
+                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        console.log('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+               case ('Toxic'):
+                  switch (theirType) {
+                     //WEAK
+                     case ('Water') :
+                        total = total / 2; //half damage
+                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     case ('Fighting') :
+                        total = total; //no effect
+                        console.log('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     //TOXIC IS OP SON!
+                     default :
+                        total = total * 2; //double damage
+                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     }
+                     break;
+
+               case ('Ground'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Electric') :
+                        total = total * 2; //double damage
+                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     case ('Fire') :
+                        total = total * 2; //double damage
+                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Water') :
+                        total = total / 2;
+                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        console.log('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+               case ('Psychic'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Fighting') :
+                        total = total * 2; //double damage
+                        console.log(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Ground') :
+                        total = total / 2;
+                        console.log('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        console.log('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+            }
+         }
+         // if same type, no effect
+         else if (yourType === theirType) {
+            console.log('Stop the in-fighting: there\'s no advantage to fighting your own kind!');
+         }
+         //amounts were small
+         theirHealth = theirHealth - total;
+         console.log('You dealt a total of '+ total + ' to your opponent.');
+         console.log(theirCard.name + ' now has ' + theirHealth + ' HP.');
+
+         if (playerOne) {
+            $('#health2').animate({
+               width: '-= total',
+            });
+         }
+         else {
+            $('#health1').animate({
+               width: '-= total',
+            })
+         }
+      }
+      //end of offensive roll
+      totalDmg();
+
+      //regen roll
+      //NO ZOMBIES!
+      if (theirHealth > 0) {
+      //ok, they aren't dead...yet. Regenerate!
+      console.log('Uh-oh, your opponent has a chance to heal!');
+         var rollRegen = function() {
+            //accuracy also determines if your defense
+            //has a chance to heal.
+            //var regen = def[1]
+
+            var regen = theirCard.def[1];
+            var regAcc = theirCard.accuracy;
+            var regRoll = d10();
+
+            if (regRoll <= accuracy) {
+               theirHealth = theirHealth + regen;
+               console.log(theirCard.name + ' healed for: ' + regen + ' HP!');
+            } else if (theirCard.name == 'Snorlax'){
+               theirHealth = theirHealth + regen;
+               console.log('Snorlax took a nap and healed for: ' + regen + ' HP!');
+            } else {
+               console.log('Whew! No regeneration this time!');
+            }
+            return regen;
+         };
+         //end regen roll
+         rollRegen();
+         theirCard.health = theirHealth;
+      }
+         //assign enemy health to card.
+      else {
+         console.log(yourCard.name + ' won! It only took you: ' + (turnCount * 2) + ' turns...');
+         console.log('Game over! Refresh!');
+         gameOver = true;
+      }
+
+      //end of turn.
+      playerOne = !playerOne;
+
+      turnCount = turnCount + .5;
+
+   };
+
+
+}//end onload
+
+function animate(){
+   yourCard.children('')
+   function changeImagesBack() {
+  timeoutID = window.setTimeout(slowAlert, 2000);
+  button click is back on
 }
-//end onload
 
-
-//   var start = $("#start");    //start button
-//   var head = $("header");     //header div
-//   var headStuff = $("#list"); //header contents
-//   var health = $(".health");  //health bars
-  //
-//   //when start button is clicked
-//   start.click(function() {
-//      makeSelectionThumbnails();
-  //
-//      //erase the start button
-//      start.detach();
-  //
-//      //roll back masthead,
-//     if(head.hasClass('open')) {
-//       head.toggleClass('open', 'closed');
-  //
-//       //show healthbars
-//       health.height('50px');
-//       health.toggleClass('closed', 'open');
-//       }
-//    });
+function slowAlert() {
+  alert("That was really slow!");
+}
+}

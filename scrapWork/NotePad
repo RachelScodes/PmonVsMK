@@ -274,6 +274,30 @@ http://www.denverloftninja.com/wp-content/uploads/2012/06/jade-wins.gif
 
 
 
+      ------------------------------------------------------------------
+
+
+      //   var start = $("#start");    //start button
+      //   var head = $("header");     //header div
+      //   var headStuff = $("#list"); //header contents
+      //   var health = $(".health");  //health bars
+        //
+      //   //when start button is clicked
+      //   start.click(function() {
+      //      makeSelectionThumbnails();
+        //
+      //      //erase the start button
+      //      start.detach();
+        //
+      //      //roll back masthead,
+      //     if(head.hasClass('open')) {
+      //       head.toggleClass('open', 'closed');
+        //
+      //       //show healthbars
+      //       health.height('50px');
+      //       health.toggleClass('closed', 'open');
+      //       }
+      //    });
 
 
 

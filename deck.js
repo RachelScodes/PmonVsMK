@@ -25,7 +25,7 @@ snorlax: {
    avatar: ['images/snorlax-avi8bit.gif', 'images/snorlax-back.gif', 'images/snorlax-win.gif'],
    attack1: ['Stomp', 5, 'Physical', 'images/snorlax-stomp.gif'], //, 'sound-src-url??'],
    attack2: ['Break Wind', 100, 'Toxic', 'images/snorlax-wind.gif'], //, 'sound-src-url??'],
-   def: ['Sleep', 3, 'images/snorlax-zzz.gif'], //, 'sound-src-url??'],
+   def: ['Sleep', 3, 'Fighting', 'images/snorlax-zzz.gif'], //, 'sound-src-url??'],
    accuracy: 2,
    health: 100
 },

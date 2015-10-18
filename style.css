@@ -34,6 +34,15 @@ li {
    margin-top: 50px;
 }
 
+.right {
+   float: right;
+}
+
+#highlight {
+   color: red;
+   text-transform: uppercase;
+}
+
 .logos {
    height: 200px;
 }
@@ -146,6 +155,7 @@ header {
 
 #card-hover {
    float: right;
+   width: 290px;
    position: absolute;
    z-index: 0;
 }
@@ -163,6 +173,10 @@ header {
 #character-select,
 #card-render {
    display: inline-block;
+}
+
+#char-name {
+   margin: 0;
 }
 
 .char-avis {

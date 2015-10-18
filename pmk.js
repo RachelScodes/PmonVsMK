@@ -29,7 +29,7 @@ window.onload = function () {
       //deck selection
       function makeSelectionThumbnails(){
          //initialize card-render area
-         $('#instructions2').hide()
+         $('#instructions2').hide();
 
          var container = $('#character-select');
          var charThumbList = doc.createElement('ul');
@@ -62,8 +62,14 @@ window.onload = function () {
                   //receiving matching html divs
                   inst.detach();
 
+                  //tldr: pushing the stats from the object into the dom
                   $('#char-name').html(charObj.name);
                   $('#avi-preview').eq(0).css('background-image', 'url(' + charObj.avatar[2] + ')');
+                  $('p#health').html('Health: <span id="highlight">' + charObj.health + '</span> HP <span class="right"><span id="accuracy">');
+                  $('span#accuracy').html('<span id="highlight">' + charObj.accuracy + '</span>/10 Accuracy</span></span>')
+                  $('p#attack1').html('Primary Attack: <span id="highlight">' + charObj.attack1[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack1[2] + '</span></span>');
+                  $('p#attack2').html('Secondary Attack: <span id="highlight">' + charObj.attack2[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack2[2] + '</span></span>');
+                  $('p#defense').html('Defense move: <span id="highlight">' + charObj.def[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.def[2] + '</span></span>');
                },
                mouseleave: function() {
                   $(this).css('border', '3px solid black');

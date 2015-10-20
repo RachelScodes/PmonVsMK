@@ -119,7 +119,7 @@ window.onload = function () {
                   }
                   //character has been selected; confirm choice.
                   confirmButton();
-
+                  event.stopPropagation();
                } //end char move click event
             }); //end all mouse event definitions
          } //end thumbnail creation for loop
@@ -185,6 +185,7 @@ window.onload = function () {
                   startBattle();
                }
             }
+            event.stopPropagation();
          });// CONFIRM button click event end
 
          //if deck has selections
@@ -205,6 +206,7 @@ window.onload = function () {
 
    function startBattle(){
       //hide all the things!
+      $('button').remove();
       $('#deck').hide("fade");
       $('#card-render').hide( "fade");
       $('#character-select').toggle( "fold");
@@ -229,8 +231,9 @@ window.onload = function () {
          $('#arena').animate({
             margin: "0px",
          })
-         drawBattle();
          $('header').off('click');
+         drawBattle();
+         event.stopPropagation();
       }); //end header click event
    } //end startBattle()
 
@@ -300,9 +303,11 @@ window.onload = function () {
                      $(this).css('border', '3px solid cornflowerblue');
                   }
                } //highlight during attack only
+               event.stopPropagation();
             },
             mouseleave: function(){
                $(this).css('border', 'border: 5px solid beige');
+               event.stopPropagation();
             }}); //highlight matches current player
          $(cardAtt1).attr('id', 'attack1').html('Attack 1: <span id="highlight">' + charObj.attack1[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack1[2] + '</span></span>');
          $(cardAtt1).on("click", function(){
@@ -318,7 +323,7 @@ window.onload = function () {
              //click registers attack and rolls dice
              attackChoice = this.id;
              redrawHeader();
-             $('header').text(thisPlayer() + ', you chose: ' + (yourCard[attackChoice][0]).toUpperCase() + '!');
+             alert(thisPlayer() + ', you chose: ' + (yourCard[attackChoice][0]).toUpperCase() + '!');
              okayButton();
            } else if (!playerOne && (this.className === "playerTwo")) {
              $(this).css('border', '5px double cornflowerblue');
@@ -330,10 +335,11 @@ window.onload = function () {
              //click registers attack and rolls dice
              attackChoice = this.id;
              redrawHeader();
-             $('header').text(thisPlayer() + ', you chose: ' + (yourCard[attackChoice][0]).toUpperCase() + '!');
+             alert(thisPlayer() + ', you chose: ' + (yourCard[attackChoice][0]).toUpperCase() + '!');
              okayButton();
            } //match clicks to card
           } //you can only click an attack if it's attack time.
+          event.stopPropagation();
           });//end attack 1 click event assignment
          $(playerScreen).append(cardAtt1);
 
@@ -349,9 +355,11 @@ window.onload = function () {
                      $(this).css('border', '3px solid cornflowerblue');
                   }
                } //highlight during attack only
+               event.stopPropagation();
             },
             mouseleave: function(){
                $(this).css('border', 'border: 5px solid beige');
+               event.stopPropagation();
             }}); //highlight matches current player
          $(cardAtt2).on("click", function(){
           if (attackTrue) {
@@ -366,7 +374,7 @@ window.onload = function () {
              //click registers attack and rolls dice
              attackChoice = this.id;
              redrawHeader();
-             $('header').text(thisPlayer() + ', you chose: ' + (yourCard[attackChoice][0]).toUpperCase() + '!');
+             alert(thisPlayer() + ', you chose: ' + (yourCard[attackChoice][0]).toUpperCase() + '!');
              okayButton();
            } else if (!playerOne && (this.className === "playerTwo")) {
              $(this).css('border', '5px double cornflowerblue');
@@ -378,10 +386,11 @@ window.onload = function () {
              //click registers attack and rolls dice
              attackChoice = this.id;
              redrawHeader();
-             $('header').text(thisPlayer() + ', you chose: ' + (yourCard[attackChoice][0]).toUpperCase() + '!');
+             alert(thisPlayer() + ', you chose: ' + (yourCard[attackChoice][0]).toUpperCase() + '!');
              okayButton();
            } //match clicks to card
           } //you can only click an attack if it's attack time.
+          event.stopPropagation();
           });//end attack 1 click event assignment
          $(playerScreen).append(cardAtt2);
 
@@ -396,9 +405,11 @@ window.onload = function () {
                      $(this).css('border', '3px solid cornflowerblue');
                   }
                } //highlight during attack only
+               event.stopPropagation();
             },
             mouseleave: function(){
                $(this).css('border', 'border: 5px solid beige');
+               event.stopPropagation();
             }
          }); //highlight matches current player
          $(cardDef).on("click", function(){
@@ -423,6 +434,7 @@ window.onload = function () {
                 rollRegen(this, yourCard, theirCard);
              }
            } //you can only click a defense if it's NOT attack time.
+           event.stopPropagation();
          });//end defense mouse click event;)
 
 
@@ -454,7 +466,6 @@ window.onload = function () {
          //show players deck choices
          $('#deckOne').show();
          $('#deckTwo').show();
-         console.log('We got to Here');
 
    } //end drawBattle()
 
@@ -493,42 +504,88 @@ function otherPlayer(){
    }
 }
 
+//okayButton rolls the start of a turn,
+//if attack time, it rolls attack,
+//if not, it rolls the regen
 function okayButton() {
-   var okButt = $('<button>');
+   var okButt = ($('button').length ? $('button') : $('<button>'));
     $(okButt).text('CONFIRM');
-    $(okButt).click(function(){
-       if (attackTrue) {
-          rollAttack();
-       } else {
-          rollRegen();
-       }
-    });
-    if ((playerOne && attackTrue) || (!playerOne && !attackTrue)){
-      $('#deckOne').append($(okButt));
-    } else {
-      $('#deckTwo').append($(okButt));
-    }
+    $(okButt).off('click');
 
+   if (playerOne && attackTrue) {
+      $('#deckOne').append($(okButt));
+      $(okButt).click(function(){
+          rollAttack();
+          event.stopPropagation();
+       });
+   } else if (!playerOne && !attackTrue) {
+      $('#deckOne').append($(okButt));
+      $(okButt).click(function(){
+          rollRegen();
+          event.stopPropagation();
+       });
+   } else if (!playerOne && attackTrue) {
+      $('#deckTwo').append($(okButt));
+      $(okButt).click(function(){
+          rollAttack();
+          event.stopPropagation();
+       });
+   } else if (playerOne && !attackTrue){
+      $('#deckTwo').append($(okButt));
+      $(okButt).click(function(){
+          rollRegen();
+          event.stopPropagation();
+      });
+   }
 };
 
+//this button triggers the ending animations
+//ending the attack, and ending the turn.
+//this button switches attackTrue and raises turnCount
+function switchButton() {
+   var switchButt = ($('button').length ? $('button') : $('<button>'));
+   $(switchButt).text('END ATTACK');
+   $(switchButt).off('click');
+
+   if (playerOne && attackTrue) {
+      $('#deckOne').append($(switchButt));
+      $(switchButt).click(function(){
+          alert('Attack is over!');
+          endAttack();
+          event.stopPropagation();
+      });
+   } else if (!playerOne && attackTrue) {
+      $('#deckTwo').append($(switchButt));
+      $(switchButt).click(function(){
+          endAttack();
+          event.stopPropagation();
+      });
+   } else if (playerOne && !attackTrue){
+      $('#deckTwo').append($(switchButt));
+      alert('Turn is over!');
+      endTurn();
+      event.stopPropagation();
+   } else if (!playerOne && !attackTrue){
+      $('#deckOne').append($(switchButt));
+      alert('Turn is over!');
+      endTurn();
+      event.stopPropagation();
+   };
+}
 
 var player1choice = '';    var player2choice = '';
+var totalInt = 0;          var rawInt = 0;
 
    function rollAttack() {
+      $('button').remove();
 
       //attackchoice is set by the click event
       //get stats from card
       var maxDamage = yourCard[attackChoice][1];
       var accuracy = yourCard.accuracy;
-      var offense = 0;
-      var theirHealth = function() {
-         if (playerOne) {
-            return $('p.playerTwo#health.highlight').get(0);
-         } else {
-            return $('p.playerOne#health.highlight').get(0);
-         }
-      }
+      var testing = 0;
 
+      //balancing damage
       if (yourCard.name === 'Snorlax') {
          maxDamage = maxDamage;
       } else {
@@ -536,9 +593,10 @@ var player1choice = '';    var player2choice = '';
          maxDamage = maxDamage * 3;
       }
 
-      alert('you have a ' + accuracy + 'out of 10 chance of dishing out maximum damage!');
+      alert('you have a ' + accuracy + ' out of 10 chance of dishing out maximum damage!');
       //roll to calculate raw damage
-      function rawDmg() {
+
+      var rawDmg = function() {
         //start of roll
         var raw = 0;
         //roll dice to see if you got max
@@ -554,328 +612,362 @@ var player1choice = '';    var player2choice = '';
          //of missing, or doing less damage
          var hitOrMiss = function () {
 
+            //if your accuracy is low, you're more likely
+            //to miss, or hit for less
+            var rd6 = d6();
             if (accuracy < 4) {
-               switch (d6()) {
+               switch (rd6) {
                   case 6:
                      raw = maxDamage / 2; // 50%
                      redrawHeader();
-                     $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                     alert('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   case 5:
                      raw = maxDamage / 4; // 25%
                      redrawHeader();
-                     $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                     alert('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   default:
-                     raw = 0;
-                     redrawHeader();
-                     $('header').text('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
                      break;
                }
             }
-
             //the better your character's accuracy
             //the less likely you'll miss or do less damage
             else if (accuracy <=7 ) {
                switch (hitMax) {
                   case (accuracy+1) :
-                     raw = maxDamage / 2; // 50 percent
+                     raw = maxDamage / 2; // 50 %
                      redrawHeader();
-                     $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                     alert('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   case (accuracy+2) :
-                     raw = maxDamage / 4; // 25 percent
+                     raw = maxDamage / 4; // 25 %
                      redrawHeader();
-                     $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                     alert('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   default :
-                     raw = 0; //none
-                     redrawHeader();
-                     $('header').text('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
                      break;
                }
             }
-
             //if you're in the middle, you have a 1/3
             //chance of either doing 50, 25, or 0% damage
             else {
                var rd3 = d3();
                switch (rd3) {
-
                   case 1:
-                     raw = 0; // 0%
+                     raw = maxDamage / 2; // 50%
                      redrawHeader();
-                     $('header').text('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                     alert('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   case 2:
                      raw = maxDamage / 4; // 25%
                      redrawHeader();
-                     $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                     alert('Uh-oh, you missed! Your attack is weaker!');
                      break;
                   default :
-                     raw = maxDamage / 2; // 50%
-                     redrawHeader();
-                     $('header').text('Uh-oh, you missed! Your attack is weaker!');
                      break;
                }
             }
-         }
-         //end of damage calculation
-        }
-        return raw;
-      }//end of raw damage dice roll
 
-      function totalDmg() {
+            //you missed completely!
+            if (raw = 0){
+               redrawHeader();
+               alert('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+            }//whiff!
+         }//end of hitOrMiss
+        }//end of calculating not max damage
+         rawInt = raw;
+     };//end of raw damage dice roll
+
+      var totalDmg = function() {
         var yourType = yourCard[attackChoice][2];
         var theirType = theirCard.def[2];
 
-        var total = rawDmg();
-        //different types have strengths/weaknesses
-        redrawHeader();
-        $('header').text('Let\'s see how ' + yourType+' stacks up against ' + theirType+'...');
+        var total = rawInt;
+        if (total <=0) {
+            //different types have strengths/weaknesses
+            redrawHeader();
+            alert('Let\'s see how ' + yourType+' stacks up against ' + theirType+'...');
 
-        alert('Your type of attack vs their type of defense may give you an advantage!');
-        if (yourType !== theirType){
-         switch (yourType) {
-            case ('Fire'):
+            alert('Your type of attack vs their type of defense may give you an advantage!');
+            if (yourType !== theirType){
+            switch (yourType) {
+               case ('Fire'):
+                   switch (theirType) {
+                    //STRONG
+                    case ('Psychic') :
+                       total = total * 2; //double damage
+                       redrawHeader();
+                       alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                       break;
+                    //WEAK
+                    case ('Water') :
+                       total = total / 2; //half damage
+                       redrawHeader();
+                       alert('Yikes! ' + yourType + ' isn\'t super effective against ' + theirType + '.\nYour attack is weakened!');
+                       break;
+                    case ('Ground') :
+                       total = total / 2;
+                       redrawHeader();
+                       alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                       break;
+                      default:
+                        noBonus();
+                        break;
+                    }
+                    break;
+
+               case ('Electric'):
                 switch (theirType) {
-                 //STRONG
-                 case ('Psychic') :
+                   //STRONG
+                   case ('Water') :
                     total = total * 2; //double damage
                     redrawHeader();
-                    $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                    alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
                     break;
-                 //WEAK
-                 case ('Water') :
+                   case ('Psychic') :
+                    total = total * 2; //double damage
+                    redrawHeader();
+                    alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                    break;
+                   //WEAK
+                   case ('Fire') :
                     total = total / 2; //half damage
                     redrawHeader();
-                    $('header').text('Yikes! ' + yourType + ' isn\'t super effective against ' + theirType + '.\nYour attack is weakened!');
+                    alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                     break;
-                 case ('Ground') :
+                   case ('Ground') :
                     total = total / 2;
                     redrawHeader();
-                    $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                    alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
                     break;
-                 }
-                 break;
+                   default:
+                     noBonus();
+                     break;
+                   }
+                   break;
 
-            case ('Electric'):
-             switch (theirType) {
-                //STRONG
-                case ('Water') :
-                 total = total * 2; //double damage
-                 redrawHeader();
-                 $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
-                 break;
-                case ('Psychic') :
-                 total = total * 2; //double damage
-                 redrawHeader();
-                 $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
-                 break;
-                //WEAK
-                case ('Fire') :
-                 total = total / 2; //half damage
-                 redrawHeader();
-                 $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
-                 break;
-                case ('Ground') :
-                 total = total / 2;
-                 redrawHeader();
-                 $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
-                 break;
-                }
-                break;
+               case ('Water'):
+                switch (theirType) {
+                   //STRONG
+                   case ('Fire') :
+                    total = total * 2; //double damage
+                    redrawHeader();
+                    alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                    break;
+                   case ('Ground') :
+                    total = total * 2; //double damage
+                    redrawHeader();
+                    alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                    break;
+                   //WEAK
+                   case ('Electric') :
+                    total = total / 2; //half damage
+                    redrawHeader();
+                    alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                    break;
+                   case ('Toxic') :
+                    total = total / 2;
+                    redrawHeader();
+                    alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                    break;
+                   default:
+                     noBonus();
+                     break;
+                   }
+                   break;
 
-            case ('Water'):
-             switch (theirType) {
-                //STRONG
-                case ('Fire') :
-                 total = total * 2; //double damage
-                 redrawHeader();
-                 $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
-                 break;
-                case ('Ground') :
-                 total = total * 2; //double damage
-                 redrawHeader();
-                 $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
-                 break;
-                //WEAK
-                case ('Electric') :
-                 total = total / 2; //half damage
-                 redrawHeader();
-                 $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
-                 break;
-                case ('Toxic') :
-                 total = total / 2;
-                 redrawHeader();
-                 $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
-                 break;
-                }
-                break;
+               case ('Fighting'):
+                switch (theirType) {
+                   //STRONG
+                   case ('Toxic') :
+                    total = total * 2; //double damage
+                    redrawHeader();
+                    alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                    break;
+                   //WEAK
+                   case ('Psychic') :
+                    total = total / 2; //half damage
+                    redrawHeader();
+                    alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                    break;
+                   case ('Water') :
+                    total = total / 2;
+                    redrawHeader();
+                    alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                    break;
+                   default:
+                     noBonus();
+                     break;
+                   }
+                   break;
 
-            case ('Fighting'):
-             switch (theirType) {
-                //STRONG
-                case ('Toxic') :
-                 total = total * 2; //double damage
-                 redrawHeader();
-                 $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
-                 break;
-                //WEAK
-                case ('Psychic') :
-                 total = total / 2; //half damage
-                 redrawHeader();
-                 $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
-                 break;
-                case ('Water') :
-                 total = total / 2;
-                 redrawHeader();
-                 $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
-                 break;
-                }
-                break;
+               case ('Toxic'):
+                switch (theirType) {
+                   //WEAK
+                   case ('Water') :
+                    total = total / 2; //half damage
+                    redrawHeader();
+                    alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                    break;
+                   case ('Fighting') :
+                    noBonus();
+                    break;
+                   //TOXIC IS OP SON!
+                   default :
+                    total = total * 2; //double damage
+                    redrawHeader();
+                    alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                    break;
+                   }
+                   break;
 
-            case ('Toxic'):
-             switch (theirType) {
-                //WEAK
-                case ('Water') :
-                 total = total / 2; //half damage
-                 redrawHeader();
-                 $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
-                 break;
-                //TOXIC IS OP SON!
+               case ('Ground'):
+                switch (theirType) {
+                   //STRONG
+                   case ('Electric') :
+                    total = total * 2; //double damage
+                    redrawHeader();
+                    alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                    break;
+                   case ('Fire') :
+                    total = total * 2; //double damage
+                    redrawHeader();
+                    alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                    break;
+                   //WEAK
+                   case ('Water') :
+                    total = total / 2;
+                    redrawHeader();
+                    alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                    break;
+                   default:
+                     noBonus();
+                     break;
+                   }
+                   break;
+
+               case ('Psychic'):
+                switch (theirType) {
+                   //STRONG
+                   case ('Fighting') :
+                    total = total * 2; //double damage
+                    redrawHeader();
+                    alert(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                    break;
+                   //WEAK
+                   case ('Ground') :
+                    total = total / 2;
+                    redrawHeader();
+                    alert('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                    break;
+                   default:
+                     noBonus();
+                     break;
+                } break;
+
+                //NO EFFECT
                 default :
-                 total = total * 2; //double damage
-                 redrawHeader();
-                 $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
-                 break;
-                }
-                break;
+                  break;
+            } //end of all the switch cases
+            function noBonus() {
+               redrawHeader();
+               alert('No bonus for you :/');
+            }
+            }
 
-            case ('Ground'):
-             switch (theirType) {
-                //STRONG
-                case ('Electric') :
-                 total = total * 2; //double damage
-                 redrawHeader();
-                 $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
-                 break;
-                case ('Fire') :
-                 total = total * 2; //double damage
-                 redrawHeader();
-                 $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
-                 break;
-                //WEAK
-                case ('Water') :
-                 total = total / 2;
-                 redrawHeader();
-                 $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
-                 break;
-                }
-                break;
+            var theirHealth = function() {
+              if (playerOne) {
+                return $('.playerTwo#health').children('#highlight').get(0).innerText;
+              } else {
+                return $('.playerTwo#health').children('#highlight').get(0).innerText;
+              }
+            };
+            theirHealth = theirHealth() - totalInt;
+         }
 
-            case ('Psychic'):
-             switch (theirType) {
-                //STRONG
-                case ('Fighting') :
-                 total = total * 2; //double damage
-                 redrawHeader();
-                 $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
-                 break;
-                //WEAK
-                case ('Ground') :
-                 total = total / 2;
-                 redrawHeader();
-                 $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
-                 break;
-             } break;
-
-             //NO EFFECT
-             default :
-               break;
-         } //end of all the switch cases
-        }
-        theirHealth = theirHealth - total;
-      }
+        total = totalInt;
+     };
       //end of offensive roll
 
-      var okButton = $('button').off('click');
-         debugger
-      okButton.on('click', function(){
-            if (attackTrue) {
-               alert('Attack is over!');
-               endAttack();
-            } else {
-               alert('Turn is over!');
-               endTurn();
-            }
-         });
+      //show animations
+      //change avatars
+      var animateAttack = function() {
+         var yourOldPic = ''; var theirOldPic = '';
+         //ANIMATE ALL THE THINGS!
+         //what are the action picture?
+         var yourNewPic = yourCard[attackChoice][3];  //ATTACK
+         var theirNewPic = theirCard.def[3];        //DEFENSE
 
-         //show animations
-         //change avatars
-         var animateAttack = function() {
-            var yourOldPic = ''; var theirOldPic = '';
-            //ANIMATE ALL THE THINGS!
-            //what are the action picture?
-            var yourNewPic = yourCard[attackChoice][3];  //ATTACK
-            var theirNewPic = theirCard.def[3];        //DEFENSE
+         //and what are the current default pics:
+         if (playerOne) {
+            yourOldPic = $('div#avi-preview.playerOne');
+            theirOldPic = $('div#avi-preview.playerTwo');
+         } else {
+            yourOldPic = $('div#avi-preview.playerTwo');
+            theirOldPic = $('div#avi-preview.playerOne');
+         }
 
-            //and what are the current default pics:
-            if (playerOne) {
-               yourOldPic = $('div#avi-preview.playerOne');
-               theirOldPic = $('div#avi-preview.playerTwo');
-            } else {
-               yourOldPic = $('div#avi-preview.playerTwo');
-               theirOldPic = $('div#avi-preview.playerOne');
-            }
+         //let's get animated!
+         $(yourOldPic).css('background-image', 'url(' + yourNewPic + ')');
+         $(theirOldPic).css('background-image', 'url(' + theirNewPic + ')');
+         $(theirOldPic).prepend(bloodGif);
 
-            //let's get animated!
-            debugger
-            $(yourOldPic).css('background-image', 'url(' + yourNewPic + ')');
-            $(theirOldPic).css('background-image', 'url(' + theirNewPic + ')');
-            $(theirOldPic).prepend(bloodGif);
-
-         };
-         animateAttack();
-
-      return totalDmg();
+      };
+      //show the ending animations
+      animateAttack();
+      //signal end of attack mode
+      switchButton();
+      debugger
+      return totalInt
 
    }//end rollAttack
 
    function endAttack(){
+      debugger
+      $('button').remove();
+
+      //what are their health bars?
       var theirHealthBar = '';
-      if (playerOne) {
-      theirHealthBar = health2;
-      theirCardHealth = $('.playerTwo#health').children('span#highlight').get(0).innerText;
-      } else {
-      theirHealthBar = health1;
-      theirCardHealth = $('.playerOne#health').children('span#highlight').get(0).innerText;
+         if (playerOne) {
+         theirHealthBar = health2;
+         theirCardHealth = $('.playerTwo#health').children('span#highlight').get(0).innerText;
+         } else {
+         theirHealthBar = health1;
+         theirCardHealth = $('.playerOne#health').children('span#highlight').get(0).innerText;
       }
 
-      redrawHeader();
-      $('header').text('You hit your opponent for '+ rollAttack() + ' HP!');
-
       //animate health bars
-      var newHBwidth = ($(theirHealthBar).width() - (rollAttack() * 4)) + 'px';
-      theirHealthBar.animate({
-       width: newHBwidth,
+      theirCardHealth -= totalInt;
+      var newHBwidth = theirCardHealth * 4;
+         theirHealthBar.animate({
+          width: newHBwidth+'px',
       });
 
+      //change the header text to show dmg amounts
       redrawHeader();
-      $('header').text(theirCard.name + ' now has ' + theirHealth + ' HP.');
-      $(theirCardHealth).text(theirHealth);
+      alert('You hit your opponent for '+ totalInt + ' HP!');
+      redrawHeader();
+      alert(theirCard.name + ' now has ' + (theirCardHealth)+ ' HP.');
+      $(theirCardHealth).text(theirCardHealth);
+
       attackTrue = !attackTrue;
 
-      $('button').remove();
+      //trigger roll regen via button
       okayButton();
+
+      return 'Attack is: ' + attackTrue;
    }
 
     function rollRegen(){
+      $('button').remove();
+
      //NO ZOMBIES!
-     if (theirHealth > 0) {
+     if (theirCardHealth > 0) {
         //ok, they aren't dead...yet. Regenerate!
         redrawHeader();
-        $('header').text('Uh-oh, your opponent has a chance to heal!');
+        alert('Uh-oh, your opponent has a chance to heal!');
+        debugger
 
         var throwThemBones = function() {
          //accuracy also determines if your defense
@@ -887,45 +979,54 @@ var player1choice = '';    var player2choice = '';
          var regRoll = d10();
 
          if ((regRoll <= accuracy) && (theirCard.name !== 'Snorlax')) {
-            theirHealth = theirHealth + regen;
+            theirCardHealth = theirCardHealth + regen;
             redrawHeader();
-            $('header').text(theirCard.name + ' healed for: ' + regen + ' HP!');
+            alert(theirCard.name + ' healed for: ' + regen + ' HP!');
          } else if (theirCard.name == 'Snorlax'){
-            theirHealth = theirHealth + regen;
+            theirCardHealth = theirCardHealth + regen;
             redrawHeader();
-            $('header').text('Snorlax took a nap and healed for: ' + regen + ' HP!');
+            alert('Snorlax took a nap and healed for: ' + regen + ' HP!');
          } else {
             redrawHeader();
-            $('header').text('Whew! No regeneration this time!');
+            alert('No regeneration this time!');
          }
          return regen;
         };
         //end regen roll
-
-        var okButton = $('button').off('click');
-          debugger
-       okButton.on('click', function(){
-             if (attackTrue) {
-                alert('Attack is over!');
-                endAttack();
-             } else {
-                alert('Turn is over!');
-                endTurn();
-             }
-          });
-
-         return throwThemBones();
      }
       else {
         redrawHeader();
-        $('header').text(thisPlayer() + ', ' + yourCard.name + ' won! It only took you: ' + (turnCount * 2) + ' turns...');
+        alert(thisPlayer() + ', ' + yourCard.name + ' won! It only took you: ' + (turnCount * 2) + ' turns...');
         redrawHeader();
         $('header').text('Game over! Refresh!');
 
-        endTurn();
-
+        gameOver = true;
+        return gameOver;
       }//assign enemy health to card.
-   }
+
+      var theirHealthBar = '';
+      if (playerOne) {
+      theirHealthBar = health2;
+      theirCardHealth = $('.playerTwo#health').children('span#highlight').get(0).innerText;
+      } else {
+      theirHealthBar = health1;
+      theirCardHealth = $('.playerOne#health').children('span#highlight').get(0).innerText;
+      }
+      //animate health bars
+      if (theirCardHealth > 0) {
+         theirCardHealth += rollRegen();
+         var newHBwidth = theirCardHealth * 4;
+         theirHealthBar.animate({
+          width: newHBwidth+'px',
+         });
+      }
+
+
+      //signal end turn via button
+      switchButton();
+
+      return theirCardHealth
+   }// end regenRoll
 
      function endTurn(){
         //reset avatars
@@ -933,12 +1034,12 @@ var player1choice = '';    var player2choice = '';
         $(theirOldPic).css('background-image', 'url(' + theirCard.avatar[0] +')');
         $(bloodGif).detach();
 
-        alert('Turn ' + turnCount + 'Over!\n It\'s' + otherPlayer() + '\'s turn to attack!');
+        $('header').text('Turn ' + turnCount + 'Over!\n It\'s' + otherPlayer() + '\'s turn to attack!');
         playerOne = !playerOne; //switch player
         turnCount = turnCount + 1;
 
         redrawHeader();
-        $('header').text(thisPlayer() + ': click an attack  FIGHT!');
+        alert(thisPlayer() + ': click an attack  FIGHT!');
   }
 
 

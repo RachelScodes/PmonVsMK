@@ -12,8 +12,8 @@ var deckJS = {
 
 sindel: {
    name: 'Sindel',
-   avatar: ['images/sindel-avi.gif', 'images/sindel-falling.gif', 'images/sindel-fatality.gif'],
-   attack1: ['Scream', 4.5, 'Psychic', 'images/sindel-scream3D.gif'], //, 'sound-src-url??'],
+   avatar: ['images/sindel-scream3D.gif', 'images/sindel-falling.gif', 'images/sindel-fatality.gif'],
+   attack1: ['Scream', 4.5, 'Psychic', 'images/sindel-avi.gif'], //, 'sound-src-url??'],
    attack2: ['Hair Whip', 4.5, 'Fighting', 'images/sindel-whip.gif'], //, 'sound-src-url??'],
    def: ['The Ring', 1.5, 'Psychic', 'images/sindel-running.gif'], //, 'sound-src-url??'],
    accuracy: 8.5,
@@ -25,7 +25,7 @@ snorlax: {
    avatar: ['images/snorlax-avi8bit.gif', 'images/snorlax-back.gif', 'images/snorlax-win.gif'],
    attack1: ['Stomp', 5, 'Physical', 'images/snorlax-stomp.gif'], //, 'sound-src-url??'],
    attack2: ['Break Wind', 100, 'Toxic', 'images/snorlax-wind.gif'], //, 'sound-src-url??'],
-   def: ['Sleep', 3, 'images/snorlax-zzz.gif'], //, 'sound-src-url??'],
+   def: ['Sleep', 3, 'Fighting', 'images/snorlax-zzz.gif'], //, 'sound-src-url??'],
    accuracy: 2,
    health: 100
 },

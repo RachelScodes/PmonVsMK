@@ -46,7 +46,7 @@ li {
 }
 
 .logos {
-   height: 100px;
+   height: 200px;
 }
 
 .logo {
@@ -59,21 +59,14 @@ li {
    background-image: url();
    background-position: center;
    background-attachment: fixed;
-   max-width: 800px;
+   max-width: 1080px;
    height: 780px;
 }
 
 header {
    text-align: center;
+   height: 150px;
    font-size: 40px;
-   overflow: hidden;
-   position: relative;
-
-
-   /*vertical-align text*/
-   /*position: relative;
-   top: 50%;
-   transform: translateY(-50%);*/
 }
 
 .open {
@@ -158,25 +151,25 @@ header {
    padding: 20px;
    width: 250px;
    height: 353px;
-   border: 7px solid darkgray;
+   border: 10px solid darkgray;
 }
 
 #card-hover {
    float: right;
    position: relative;
-   width: 250px;
+   width: 218px;
    z-index: 0;
-   height: 350px;
+   height: 410px;
 }
 
 #character-select {
    float: left;
    background-color: white;
    border-radius: 15px;
-   border: 7px double indianred;
-   width: 450px;
+   border: 10px double indianred;
+   width: 500px;
    height: 270px;
-   padding-top: 7px;
+   padding-top: 10px;
 }
 
 #character-select,
@@ -219,16 +212,14 @@ img.char-avatars {
 
 #avi-preview {
    border-radius: 15px;
-   border: 7px solid lightgray;
-   height: 128px;
-   width: 200px;
+   border: 10px solid lightgray;
+   height: 135px;
+   width: 187px;
    background-position: center bottom;
    background-repeat: no-repeat;
    background-size: contain;
    background-color: grey;
-   margin: 0 auto;
-   display: block;
-   float: none;
+   margin-right: 19px;
 }
 
 #card-render {
@@ -236,9 +227,9 @@ img.char-avatars {
 }
 
 #deck {
-   border: 7px dashed hotpink;
+   border: 10px dashed hotpink;
    height: 75px;
-   width: 450px;
+   width: 492px;
    z-index: 20;
    position: relative;
    margin-top: 20px;
@@ -276,7 +267,7 @@ div.playerTwo,
 }
 
 .playerDeck {
-   border: 5px dotted hotpink;
+   border: 5px dashed double hotpink;
    height: 75px;
    width: 350px;
    z-index: 20;
@@ -294,8 +285,4 @@ div.playerTwo,
    width: inherit;
    height: inherit;
    z-index: 1000;
-}
-
-p {
-   border: 5px solid beige;
 }

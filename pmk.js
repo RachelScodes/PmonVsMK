@@ -206,7 +206,9 @@ window.onload = function () {
 
    function startBattle(){
       //hide all the things!
+
       $('button').remove();
+
       $('#deck').hide("fade");
       $('#card-render').hide( "fade");
       $('#character-select').toggle( "fold");
@@ -294,6 +296,7 @@ window.onload = function () {
          //clickable/selectable attacks
          //attack number 1
          var cardAtt1 = $('<p>')
+         $(cardAtt1).attr('id', 'attack1').html('Attack 1: <span id="highlight">' + charObj.attack1[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack1[2] + '</span></span>');
          $(cardAtt1).on({
             mouseenter: function(){
                if (attackTrue) {
@@ -309,7 +312,6 @@ window.onload = function () {
                $(this).css('border', 'border: 5px solid beige');
                event.stopPropagation();
             }}); //highlight matches current player
-         $(cardAtt1).attr('id', 'attack1').html('Attack 1: <span id="highlight">' + charObj.attack1[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack1[2] + '</span></span>');
          $(cardAtt1).on("click", function(){
           if (attackTrue) {
            if (playerOne && (this.className === "playerOne")) {
@@ -346,6 +348,7 @@ window.onload = function () {
          //attack number 2
          var cardAtt2 = $('<p>')
          $(cardAtt2).attr('id', 'attack2').html('Attack 2: <span id="highlight">' + charObj.attack2[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack2[2] + '</span></span>');
+
          // $(cardAtt2).on({
          //    mouseenter: function(){
          //       if (attackTrue) {
@@ -361,6 +364,7 @@ window.onload = function () {
          //       $(this).css('border', 'border: 5px solid beige');
          //       event.stopPropagation();
          //    }}); //highlight matches current player
+
          $(cardAtt2).on("click", function(){
           if (attackTrue) {
            if (playerOne && (this.className === "playerOne")) {
@@ -395,6 +399,7 @@ window.onload = function () {
 
          var cardDef = $('<p>')
          $(cardDef).attr('id', 'defense').html('Defense: <span id="highlight">' + charObj.def[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.def[2] + '</span></span>');
+
          // $(cardDef).on({
          //    mouseenter: function(){
          //       if (!attackTrue) {
@@ -412,6 +417,40 @@ window.onload = function () {
          //    }
          // }); //highlight matches current player
 
+         cardDef.hover(function(){
+               if (!attackTrue) {
+                  if (playerOne && (this.className === "playerOne")) {
+                     $(this).css('border', '3px solid indianred');
+                  } else if (!playerOne && (this.className === "playerTwo")) {
+                     $(this).css('border', '3px solid cornflowerblue');
+                  }
+               } //highlight during attack only
+            }, function(){
+               $(this).css('border', 'border: 5px solid beige');
+            }); //highlight matches current player
+         cardDef.click(function(){
+               if (!attackTrue) {
+                  if (playerOne && (this.className === "playerTwo")) {
+                     $(this).css('border', '5px double cornflowerblue');
+
+                     //pass parameters into turn and animate functions
+                     yourCard = player1choice;
+                     theirCard = player2choice;
+
+                     //click registers attack, and animates cards
+                     rollRegen(this, yourCard, theirCard);
+                  } else if (!playerOne && (this.className === "playerOne")) {
+                     $(this).css('border', '5px double indianred');
+
+                     //pass parameters into turn and animate functions
+                     yourCard = player2choice;
+                     theirCard = player1choice;
+
+                     //click registers attack, and animates cards
+                     rollRegen(this, yourCard, theirCard);
+                  }
+               } //you can only click a defense if it's NOT attack time.
+            });//end defense mouse click event;
          $(playerScreen).append(cardDef);
 
          //give all card attributes the className of their player
@@ -424,6 +463,7 @@ window.onload = function () {
 
          //base width on character health, multiplied for good pixel ratio
          var healthStartWidth = (charObj.health * 4) + 'px';
+
             $(healthBar).animate({
                width: healthStartWidth,
             }, "slow");
@@ -552,7 +592,6 @@ var player1choice = '';    var player2choice = '';
 var totalInt = 0;          var rawInt = 0;
 
    function rollAttack() {
-      debugger
       $('button').remove();
 
       //attackchoice is set by the click event
@@ -1027,12 +1066,6 @@ var totalInt = 0;          var rawInt = 0;
          yourOldPic = $('div#avi-preview.playerTwo');
          theirOldPic = $('div#avi-preview.playerOne');
       }
-
-      //let's get animated!
-      $(yourOldPic).css('background-image', 'url(' + yourCard.avatar[0] +')');
-      $(theirOldPic).css('background-image', 'url(' + theirCard.avatar[0] +')');
-      $(bloodGif).detach();
-
       $('header').text('Turn ' + turnCount + 'Over!\n It\'s' + otherPlayer() + '\'s turn to attack!');
       playerOne = !playerOne; //switch player
       turnCount = turnCount + 1;
@@ -1040,6 +1073,4 @@ var totalInt = 0;          var rawInt = 0;
       //redrawHeader();
       alert(thisPlayer() + ': click an attack  FIGHT!');
    }
-
-
 }//end onload

@@ -155,9 +155,9 @@ header {
    z-index: 5;
    background-color: white;
    border-radius: 15px;
-   padding: 20px;
-   width: 250px;
-   height: 353px;
+   padding: 15px;
+   width: 270px;
+   height: 340px;
    border: 7px solid darkgray;
 }
 
@@ -247,7 +247,7 @@ img.char-avatars {
    display: inline-block;
 }
 
-button {
+.play-butt {
    display: inline-block;
    float: right;
    position: relative;
@@ -281,7 +281,7 @@ div.playerTwo,
    width: 350px;
    z-index: 20;
    position: relative;
-   margin-top: 20px;
+   margin-top: 17px;
    clear: both;
    display: inline-block;
 }

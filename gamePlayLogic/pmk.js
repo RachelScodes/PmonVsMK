@@ -6,7 +6,7 @@ window.onload = function () {
 
    var doc = document;
 
-   var deck = {
+   var deckObj = {
       pikachu: {
          name: 'Pikachu',
          avatar: ['http://www.pokemon-paradijs.com/animated-gifs/image/pikachu_rent2.gif', 'http://t02.deviantart.net/qIauUAAZi3LyEERUiqEMA0CKWN4=/fit-in/150x150/filters:no_upscale():origin()/pre15/a015/th/pre/f/2013/019/f/9/dead_pikachu_by_pickachua-d5s17w6.png', 'http://i1263.photobucket.com/albums/ii631/Pokemon-Vampire-Knight-lover/pikachu_.gif'],
@@ -50,7 +50,7 @@ window.onload = function () {
 
    };
 
-   var deckMax = 2;
+   var deckMax = 1;
 
    $('#instructions2').detach();
 
@@ -90,20 +90,22 @@ window.onload = function () {
 
       //show character select thumbnail screen
       //deck selection
-      function charThumbListScreen(){
+      function renderCharSelect(){
 
          var container = $('#character-select');
-         var charThumbList = doc.createElement('ul');
-         charThumbList.id = "char-thumbnail-ul";
+         var charSelectList = doc.createElement('ul');
+         charSelectList.id = "char-thumbnail-ul";
 
          var inst = $('.default');
 
-         for (var i in deck) {
+         //draw char select screen
+         //generate divs for char avis
+         for (var i in deckObj) {
             var char = doc.createElement('li');
             char.setAttribute('class', 'char-avatars');
-            char.setAttribute('value', deck[i].name);
-            $(char).css('background-image', 'url(' + deck[i].avatar[0] + ')');
-            charThumbList.appendChild(char);
+            char.setAttribute('value', deckObj[i].name);
+            $(char).css('background-image', 'url(' + deckObj[i].avatar[0] + ')');
+            charSelectList.appendChild(char);
 
             //hover displays char stats in #card-render
             $(char).on({
@@ -115,8 +117,8 @@ window.onload = function () {
                      $(this).css('border', '3px solid cornflowerblue');
                   }
                   //bind dom element to deck key
-                  var charHov = $(this).attr('value').toLowerCase();
-                  var charObj = deck[charHov];
+                  var charHov = $(this).attr('value');
+                  var charObj = deckObj[charHov];
 
                   //push elements from deck[value] to
                   //receiving matching html divs
@@ -134,7 +136,6 @@ window.onload = function () {
             //end hover/char preview event
 
             //click adds/removes charObjs from deck
-            //aka swap char choice before confirming
             $(char).click(function(){
                //eo is event object
                eo = $(this).get(0);
@@ -152,7 +153,7 @@ window.onload = function () {
                //move it back to char select screen.
                if (eo.parentElement.id == 'deck') {
                   $(eo).detach();
-                  $(eo).appendTo(charThumbList);
+                  $(eo).appendTo(charSelectList);
                }
 
                //if card is not in deck, but deck
@@ -171,23 +172,23 @@ window.onload = function () {
                   //add it to deck
                   $(eo).appendTo($('#deck'));
                }
-               //character has been selected, toggle
-               togglePlayer();
+               //character has been selected
+               //confirm choice and switch player
+               makeConfirmButton();
             });
             //end char move click event
          }
          //end charcter-select thumbnail screen creation
 
-         container.append(charThumbList);
+         container.append(charSelectList);
       };
 
-      charThumbListScreen();
+      renderCharSelect();
 
-      function togglePlayer(){
+      function makeConfirmButton(){
          //Make buttons that CONFIRM character choice.
          //and switch player
          for (var b = 2; b !== 0; b-=1) {
-            console.log(b);
             debugger
             var playButt = $('<button/>');
             $(playButt).text('Player '+ b + ': CONFIRM');
@@ -229,7 +230,6 @@ window.onload = function () {
                   $('#deck').append($('#playButt2'));
                }
             }
-
          }
          //end button creation and appending
 
@@ -240,13 +240,6 @@ window.onload = function () {
 
      console.log('it\'s all loaded!');
 };
+
+
 //end onload
-
-function startBattle(){
-   //remove character select. and card render
-   $('#character-select').detach();
-   $('.card').each().detach();
-
-   //make battleground
-   $('<div>')
-}

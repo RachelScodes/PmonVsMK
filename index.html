@@ -4,7 +4,10 @@
    <meta charset="utf-8">
    <title>Pokemon X Street Fighter</title>
    <link rel="stylesheet" href="style.css" type="text/css" ></link>
+   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"></link>
+   <script src="deck.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+   <script src="jquery.confirm-master/jquery.confirm.min.js"></script>
 </head>
 <body>
 <div id="container">
@@ -16,12 +19,8 @@
       </ul>
    </header>
    <div class="health closed">
-      <div id="health1">
-         Pikachu</div>
-      <div id="health2">
-         Sindell</div>
-      <button id="confirm">CONFIRM</button>
-      <button id="start">FIGHT!</button>
+      <div id="health1"></div>
+      <div id="health2"></div>
    </div>
    <div id="arena">
 
@@ -36,23 +35,16 @@
 
       <div id="card-render">
       <!-- character info is pushed here when you hover over it -->
-         <div id="card-hover">
+         <div class="card" id="card-hover">
             <h1 id="char-name">&nbsp</h1>
             <img id="avi-preview"></img>
-            <div class="stats">
-               <p id="main">Health:
-               <br/>/10 Accuracy</p>
-               <p id="attack1">Primary Attack:
-                  <br/>Attack Type:</p>
-               <p id="attack2">Secondary Attack:
-                  <br/>Attack Type:</p>
-               <p id=defense>Defense move:
-                  </p>
-
-            </div>
+            <p id="health"></p>
+            <p id="attack1"></p>
+            <p id="attack2"></p>
+            <p id=defense></p>
          </div>
          <!-- This div is displayed when no card is rendered -->
-         <div class="default">
+         <div class="card" id="instr">
             <div class="instructions" id="instructions1">
                <h1>PLAYER 1: Select a character!</h1>
                <p class="first">Hover over a character to view their stats.</p>
@@ -72,16 +64,7 @@
    <!-- visible during gameplay -->
    <!-- visible during gameplay -->
    <!-- visible during gameplay -->
-      <div id="user">
-         <div class="user-card">
-         <!--  -->
-         </div>
-      </div>
 
-      <div id="comp">
-         <div class="user-card"></div>
-
-      </div>
    </div>
 </div>
 <script src="pmk.js"></script>

@@ -1,111 +1,44 @@
 window.onload = function () {
-  console.log("It's loaded!");
 
-   //global scorekeeping variables
-   playerOne = true;
+   $('#card-hover').hide(); //hide the card-preview area.
 
-   var doc = document;
+   var deckObj = deckJS; //import cards from deck.js
+   var doc = document; //DOM shortcut
 
-   var deck = {
-      pikachu: {
-         name: 'Pikachu',
-         avatar: ['http://www.pokemon-paradijs.com/animated-gifs/image/pikachu_rent2.gif', 'http://t02.deviantart.net/qIauUAAZi3LyEERUiqEMA0CKWN4=/fit-in/150x150/filters:no_upscale():origin()/pre15/a015/th/pre/f/2013/019/f/9/dead_pikachu_by_pickachua-d5s17w6.png', 'http://i1263.photobucket.com/albums/ii631/Pokemon-Vampire-Knight-lover/pikachu_.gif'],
-         attack1: ['ElectroCute', 4.5, 'Electric', 'http://orig15.deviantart.net/e860/f/2010/105/8/e/pikachu___volt_tackle_by_hanshumon.gif'], //, 'sound-src-url??'],
-         attack2: ['Pound', 4, 'Physical', 'http://urpgdex.monbrey.com.au/art/models/25-2.gif'], //, 'sound-src-url??'],
-         def: ['Defibrilator', 3.5, 'http://i634.photobucket.com/albums/uu68/coocoo406/moving_pikachu.gif'], //, 'sound-src-url??'],
-         accuracy: 7,
-         health: 60,
-         //winMsg: ['http://img06.deviantart.net/6dae/i/2011/030/1/7/pikacide_by_kid_viral-d38fbjk.jpg', ('I don'+'t know where you got that axe, but you win buddy! An ELECTRIC victory!')]
-      },
+   //global scorekeeping variables         //game on?
+   var playerOne = true;                  var gameOver = false;
+   var yourCard = '';                     // var playerOneWins: 0;
+   var theirCard = '';                    // var playerTwoWins: 0;
 
-      sindel: {
-         name: 'Sindel',
-         avatar: ['http://vignette3.wikia.nocookie.net/mortalkombat/images/9/93/Vs_sindel.gif/revision/latest?cb=20090917142727&path-prefix=es', 'http://www.theageofmammals.com/blogmedia/mk/sindel-falling.gif', 'http://bestanimations.com/Games/Computer/MortalCombat/Sindel/mortalkombatsindelanimation-3.gif'],
-         attack1: ['Scream', 4.5, 'Psychic', 'images/s-scream.gif'], //, 'sound-src-url??'],
-         attack2: ['Hair Whip', 4.5, 'Physical', 'images/s-whip.gif'], //, 'sound-src-url??'],
-         def: ['The Ring', 1.5, 'http://www.fightersgeneration.com/np2/char1/gifs/sindel-mk3-slip.gif'], //, 'sound-src-url??'],
-         accuracy: 8.5,
-         health: 70,
-      },
+   // max # of cards in player decks      //total back and forth turns:
+   var deckMax = 1;                       var turnCount = 0;
 
-      snorlax: {
-         name: 'Snorlax',
-         avatar: ['http://33.media.tumblr.com/e6a9f362751cdc95b3be52196ee66b2b/tumblr_mnalxua3us1rfjowdo1_500.gif', 'https://shadowdaleraven.files.wordpress.com/2013/03/snorlax.gif', 'http://orig07.deviantart.net/876e/f/2010/269/9/1/flying_snorlax_by_mrsquirrelz-d2zif7h.gif'],
-         attack1: ['Stomp', 5, 'Physical', 'http://orig08.deviantart.net/66ad/f/2013/039/d/f/143att2_by_joshr691-d5u9qir.gif'], //, 'sound-src-url??'],
-         attack2: ['Break Wind', 100, 'Toxic', 'http://i1014.photobucket.com/albums/af266/Nightslayer_321/Gifs/Snorlax-Rest_zpse7f40dd8.gif'], //, 'sound-src-url??'],
-         def: ['Sleep', 3, 'https://shadowdaleraven.files.wordpress.com/2013/03/snorlax.gif'], //, 'sound-src-url??'],
-         accuracy: 2,
-         health: 100,
-      },
-
-      scorpion: {
-         name: 'Scorpion',
-         avatar: ['http://33.media.tumblr.com/f0bd4e780fe86557675903070dffa2a3/tumblr_mhqa0bHAC31s0pq6co1_250.gif', 'http://i225.photobucket.com/albums/dd155/GM123456/Scorpion_3d_UMK3_stumble.gif', 'http://www.gifmagic.com/queue/scorpion_dancing_by_methados1_23687.gif'],
-         attack1: ['Spear', 4, 'Physical', 'ttp://orig12.deviantart.net/75fd/f/2013/099/8/0/gif_scorpion_get_over_here_animation_mk_by_luis_mortalkombat14-d6128nw.gif'], //, 'sound-src-url??'],
-         attack2: ['Hellfire Punch', 4.5, 'Fire', 'http://orig03.deviantart.net/06a8/f/2013/100/0/e/gif_scorpion_toasty_fatality_mk_by_luis_mortalkombat14-d6167ab.gif'], //, 'sound-src-url??'],
-         def: ['Flips and Stuff', 3, 'http://i225.photobucket.com/albums/dd155/GM123456/Scorpion_3d_UMK3_stumble.gif'], //, 'sound-src-url??'],
-         accuracy: 7,
-         health: 80,
-      }
-
-   };
-
-   var deckMax = 2;
-
-   $('#instructions2').detach();
-
-   if (!playerOne) {
-      $('#instructions2').appendTo($('.default'));
-      $('#instructions1').detach();
-      playerOne = true;
-   }
-
-   console.log('variables loaded ok');
-
-   console.log('startgame');
-   //start game
-   (function() {
-     var start = $("#start");
-     var head = $("header");
-     var headStuff = $("#list");
-     var health = $(".health");
-
-     //when start button is clicked
-     start.click(function() {
-
-        //erase the start button
-        start.detach();
-
-        //roll back masthead,
-       if(head.hasClass('open')) {
-         head.removeClass('open');
-         head.addClass('closed');
-
-         //show healthbars
-         health.removeClass('closed');
-         health.addClass('open');
-         health.height('50px');
-         }
-      });
+   //start game! pick cards!
+   function chooseYourCards() {
+      //TO-DO expand header as loading screen.
+      $('header').css('background-color', 'white');
 
       //show character select thumbnail screen
-      //deck selection
-      function charThumbListScreen(){
+      function makeSelectionThumbnails(){
 
+         var inst = $('.card#instr'); //instruction card-area
+         $('#instructions2').hide(); //playerOne starts
+
+         //draw containers for character list
          var container = $('#character-select');
          var charThumbList = doc.createElement('ul');
          charThumbList.id = "char-thumbnail-ul";
 
-         var inst = $('.default');
-
-         for (var i in deck) {
+         //draw character-select thumbnails
+         for (var i in deckObj) {
             var char = doc.createElement('li');
-            char.setAttribute('class', 'char-avatars');
-            char.setAttribute('value', deck[i].name);
-            $(char).css('background-image', 'url(' + deck[i].avatar[0] + ')');
+            char.setAttribute('class', 'char-avis');
+            char.setAttribute('value', deckObj[i].name);
+            $(char).css('background-image', 'url(' + deckObj[i].avatar[0] + ')');
             charThumbList.appendChild(char);
 
             //hover displays char stats in #card-render
+            //click moves choice to player deck.
             $(char).on({
                mouseenter: function() {
                   //change border on hover, like in MK
@@ -116,137 +49,749 @@ window.onload = function () {
                   }
                   //bind dom element to deck key
                   var charHov = $(this).attr('value').toLowerCase();
-                  var charObj = deck[charHov];
+                  var charObj = deckObj[charHov];
 
-                  //push elements from deck[value] to
-                  //receiving matching html divs
-                  inst.detach();
+                  inst.hide();
+                  $('#card-hover').show();
 
+                  //pushing the stats from charObject into #card-hover
                   $('#char-name').html(charObj.name);
                   $('#avi-preview').eq(0).css('background-image', 'url(' + charObj.avatar[2] + ')');
+                  $('p#health').html('Health: <span id="highlight">' + charObj.health + '</span> HP <span class="right"><span id="accuracy">');
+                  $('span#accuracy').html('<span id="highlight">' + charObj.accuracy + '</span>/10 Accuracy</span></span>')
+                  $('p#attack1').html('Primary Attack: <span id="highlight">' + charObj.attack1[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack1[2] + '</span></span>');
+                  $('p#attack2').html('Secondary Attack: <span id="highlight">' + charObj.attack2[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack2[2] + '</span></span>');
+                  $('p#defense').html('Defense move: <span id="highlight">' + charObj.def[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.def[2] + '</span></span>');
                },
                mouseleave: function() {
                   $(this).css('border', '3px solid black');
                   //restore render div to default
-                  inst.prependTo($('#card-render'));
-               }
-            });
-            //end hover/char preview event
+                  $('#card-hover').hide();
+                  inst.show();
+               }, //end hover/char preview event
 
-            //click adds/removes charObjs from deck
-            //aka swap char choice before confirming
-            $(char).click(function(){
-               //eo is event object
-               eo = $(this).get(0);
+               //click adds/removes characters from deck,
+               //user can swap char choice before confirming
+               click: function() {
 
-               //if no deck, create deck
-               var deckJQ = $('div#deck').length ? $('div#deck') : $('<div id="deck">');
-               deckJS = $(deckJQ).get(0);
+                  //eo is event object
+                  eo = $(this).get(0);
 
-               //and add deck to arena, inside container.
-               if (deckJS.parentElement !== 'div#arena'){
-                  $(deckJQ).appendTo($('#arena'));
-               }//if deck is already there, then nothing.
+                  //if no deck, create deck
+                  var deckJQ = $('div#deck').length ? $('div#deck') : $('<div id="deck">');
+                  deckJS = $(deckJQ).get(0);
 
-               //if eo is currently in deck,
-               //move it back to char select screen.
-               if (eo.parentElement.id == 'deck') {
-                  $(eo).detach();
-                  $(eo).appendTo(charThumbList);
-               }
+                  //and add deck to arena, inside container.
+                  if (deckJS.parentElement !== $('div#arena').get(0)){
+                     $(deckJQ).appendTo($('#arena'));
+                  }//if deck is already there, then nothing.
 
-               //if card is not in deck, but deck
-               //already has a card. no dice.
-               else if ((!$('#deck').is(':empty')) && (eo.parentElement.id !== 'deck')){
+                  //if eo is currently in deck,
+                  //move it back to char select screen.
+                  if (eo.parentElement.id == 'deck') {
+                     $(eo).detach();
+                     $(eo).appendTo(charThumbList);
+                     $('.play-butt').detach();
+                  }
+                  //don't move a card into a full deck.
+                  else if (($('#deck').children('li.char-avis').length === deckMax ) && (eo.parentElement.id !== 'deck')){
+                     //TO-DO - refactor/update: pop over instructions?
+                     alert('Greedy! You can play as one character at a time!\n Click a character in your deck to remove it first,\n THEN you can choose another one.');
+                  }
 
-               //TO-DO - refactor/update: pop over instructions?
-                  alert('Greedy! You can play as one character at a time!\n Click a character in your deck to remove it first,\n THEN you can choose another one.');
-               }
+                  //add card to the damned deck awready! lol
+                   else if ($('#deck').children('li.char-avis').length < deckMax) {
+                     $(eo).detach(); //detach clicked char
+                     $(eo).appendTo($('#deck')); //add it to deck
+                  }
+                  //character has been selected; confirm choice.
+                  confirmButton();
 
-               //if deck is empty and card is clicked
-               //add it to the damned deck awready! lol
-                else if ($('#deck').is(':empty')) {
-                  //detach clicked char
-                  $(eo).detach();
-                  //add it to deck
-                  $(eo).appendTo($('#deck'));
-               }
-               //character has been selected, toggle
-               togglePlayer();
-            });
-            //end char move click event
-         }
-         //end charcter-select thumbnail screen creation
+               } //end char move click event
+            }); //end all mouse event definitions
+         } //end thumbnail creation for loop
 
+         //all thumbnails generated, add list to screen.
          container.append(charThumbList);
-      };
 
-      charThumbListScreen();
+      } //end character-select thumbnail screen creation
+      makeSelectionThumbnails();
 
-      function togglePlayer(){
-         //Make buttons that CONFIRM character choice.
-         //and switch player
-         for (var b = 2; b !== 0; b-=1) {
-            console.log(b);
-            debugger
-            var playButt = $('<button/>');
-            $(playButt).text('Player '+ b + ': CONFIRM');
-            $(playButt).attr('class', 'play-butt');
-            $(playButt).attr('id', 'playButt' + b);
+      //Make button that CONFIRMS character choice and switches player
+      function confirmButton(){
 
-            $(playButt).click(function(){
-               //create new div for player hand
-               //switch who is selecting
-               var playerDeck = $('<div>');
-                  $(playerDeck).attr('class', 'player-deck');
-                  $(playerDeck).attr('id', function getDeckID(){
-                                          if (playerOne) { return 'deckOne' }
-                                          else { return 'deckTwo' }
-                                       });
+         //fetch the button. if no button exists, create one
+         var playButt = $('.play-butt').length ? $('.play-butt') : $('<button class="play-butt">');
 
-               //move deck selection, into player's personal hand.
-               if (playerOne) {
-                  $("#deckOne").append($("#deck").html());
-               } else {
-                  $("#deckTwo").append($("#deck").html())
-               }
+         //what goes in the button depends on whose turn it is.
+         if (playerOne){
+            $(playButt).text('Player One: CONFIRM');
+            $(playButt).attr('id', 'playButt1');
+         } else {
+            $(playButt).text('Player Two: CONFIRM');
+            $(playButt).attr('id', 'playButt2');
+         }
+         //what does the button do?
+         $(playButt).click(function(){
+            //selection is confirmed, player select switches
+            //move deck selection, into player's personal hand.
+            var yourDeck = 'empty';
 
-               //selection is confirmed, player select switches
-               playerOne = !playerOne;
+            //fetch or make individual decks for players
+            if (playerOne) {
+               yourDeck = $('#deckOne').length ? $('#deckOne') : $('<div id="deckOne">');
+            } else {
+               yourDeck = $('#deckTwo').length ? $('#deckTwo') : $('<div id="deckTwo">');
+            }
+            yourDeck.addClass('playerDeck');
+            yourDeck.appendTo('#arena');
+            yourDeck.hide();
 
-            });
-            // CONFIRM button event end
-
-            //if deck has selections
-            //change bg to indicate player
-            //and attach buttons
-            if ($('#deck').html().length) {
-               if (playerOne) {
-                  $('#deck').css('background-color', 'indianred');
-                  $('#deck').append($('#playButt1'));
-               } else {
-                  $('#deck').css('background-color', 'cornflowerblue');
-                  $('#deck').append($('#playButt2'));
-               }
+            //can't confirm if the deck isn't full.
+            if ($('#deck').children('li.char-avis').length < deckMax) {
+               alert('Your deck is not at the max yet, choose some characters!');
             }
 
-         }
-         //end button creation and appending
+            //if deck is full
+            else {
+               $(playButt).detach(); //detach button
+               $(yourDeck).append($("#deck").html()); //add contents to player hand
+               $('#deck').html(' '); //clear the deck, no repeats.
 
-      };
+               //toggle player
+               if (playerOne) {
+                  //change instructions to match player
+                  $('#instructions2').show();
+                  $('#instructions1').hide();
+                  $('#deck').css('background-color', 'beige');
+                  playerOne = !playerOne;
+               } else {
+                  playerOne = !playerOne;
 
-   })();
-     //end startgame
+                  //it's fighting time!
+                  startBattle();
+               }
+            }
+         });// CONFIRM button click event end
 
-     console.log('it\'s all loaded!');
-};
-//end onload
+         //if deck has selections
+         //change bg to indicate player
+         //and attach buttons
+         if ($('#deck').html().length) {
+            if (playerOne) {
+               $('#deck').css('background-color', 'indianred');
+               $('#deck').append($(playButt));
+            } else {
+               $('#deck').css('background-color', 'cornflowerblue');
+               $('#deck').append($(playButt));
+            }
+         } //end button creation and appending
+      } //end confirmButton() maker
+   }; //end chooseYourCards
+   chooseYourCards();
 
-function startBattle(){
-   //remove character select. and card render
-   $('#character-select').detach();
-   $('.card').each().detach();
+   function startBattle(){
+      //hide all the things!
+      $('#deck').hide("fade");
+      $('#card-render').hide( "fade");
+      $('#character-select').toggle( "fold");
+      $('header').animate({
+         height: "+=500px",
+         lineHeight: "40px",
+         fontSize: "20px",
+         });
+
+      //let users know what happens next
+      $('header').html('<br/>Now your decks are complete, choose your attacks wisely...<br/>IT\'S MORTAL KOMBAT!<br/>Click this screen to begin!');
+
+      //when header is clicked, battle starts.
+      $('header').click(function(){
+         $('header').removeAttr('style').css('background-color');
+         $('header').css('color', 'white');
+         $('header').text(' ');
+         $('header').animate({
+            height: "60px",
+            backgroundColor: 'rgba(0, 0, 0, 0)',
+         });
+
+         $('header').off('click');
+         drawBattle();
+      }); //end header click event
+   } //end startBattle()
 
    //make battleground
-   $('<div>')
-}
+   function drawBattle(){
+
+      //draw two divs for cards/decks
+      //populate with data from selected card
+      //for now, automatic to first choice
+
+      var player1choice = $('#deckOne').children().get(0);
+      player1choice = player1choice.getAttribute('value').toLowerCase();
+      player1choice = deckObj[player1choice];
+
+      var player2choice = $('#deckTwo').children().get(0);
+      player2choice = player2choice.getAttribute('value').toLowerCase();
+      player2choice = deckObj[player2choice];
+
+      var playerScreen = 'unknown';
+      var setClass = 'unknown';
+
+      for (var i = 0; i<2; i++){
+         playerScreen = $('<div>');
+
+         //whose info goes in the card?
+         if (playerOne) {
+            setClass = 'playerOne';
+            charObj = player1choice;
+            healthBar = $('#health1');
+         } else {
+            setClass = 'playerTwo';
+            charObj = player2choice;
+            healthBar = $('#health2');
+         }
+
+         //place specific values into generic ones
+         $(playerScreen).attr('class', setClass);
+         $(playerScreen).attr('value', charObj);
+
+         //automatically style card
+         $(playerScreen).addClass('card');
+
+         //display character choice
+         var cardName = $('<h1>')
+         $(cardName).attr('id', 'char-name').text(charObj.name);
+         $(playerScreen).append(cardName);
+
+         //display default avatar
+         var cardPic = $('<img>')
+         $(cardPic).attr('id', 'avi-preview').css('background-image', 'url(' + charObj.avatar[0] + ')');
+         $(playerScreen).append(cardPic);
+
+         //show starting health
+         var cardHealthAcc = $('<p>')
+         $(cardHealthAcc).attr('id', 'health').html('Health: <span id="highlight">' + charObj.health + '</span> HP <span class="right"><span id="accuracy"><span id="highlight">' + charObj.accuracy + '</span>/10 Accuracy</span></span>');
+         $(playerScreen).append(cardHealthAcc);
+
+         //clickable/selectable attacks
+         //attack number 1
+         var cardAtt1 = $('<p>')
+         $(cardAtt1).attr('id', 'attack1').html('Attack 1: <span id="highlight">' + charObj.attack1[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack1[2] + '</span></span>');
+         cardAtt1.on({
+            mouseover: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '3px solid indianred');
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '3px solid cornflowerblue');
+               }
+            }, //highlight matches current player
+            mouseleave: function() {
+               $(this).css('border', 'none');
+            },
+            click: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '5px double indianred');
+
+                  //pass parameters into turn and animate functions
+                  yourCard = player1choice;
+                  theirCard = player2choice;
+
+                  //click registers attack, and animates cards
+                  animatePic(yourCard, this.id, theirCard);
+                  turn(this, yourCard, theirCard);
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '5px double cornflowerblue');
+
+                  //pass parameters into turn and animate functions
+                  yourCard = player2choice;
+                  theirCard = player1choice;
+
+                  //click registers attack, and animates cards
+                  animatePic(yourCard, this.id, theirCard);
+                  turn(this, yourCard, theirCard);
+               } else {
+                  if (playerOne) {
+                     alert('Player One: Choose your attack!');
+                  } else {
+                     alert('Player Two: Choose your attack!');
+                  }
+               }
+            }
+         });
+
+         $(playerScreen).append(cardAtt1);
+
+         //attack number 2
+         var cardAtt2 = $('<p>')
+         $(cardAtt2).attr('id', 'attack2').html('Attack 2: <span id="highlight">' + charObj.attack2[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.attack2[2] + '</span></span>');
+         cardAtt2.on({
+            mouseover: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '3px solid indianred');
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '3px solid cornflowerblue');
+               } else {
+                  //nothing
+               }
+            },
+            mouseleave: function() {
+               $(this).css('border', 'none');
+            },
+            click: function(){
+               if (playerOne && (this.className === "playerOne")) {
+                  $(this).css('border', '5px double indianred');
+
+                  //pass parameters into turn and animate functions
+                  yourCard = player1choice;
+                  theirCard = player2choice;
+
+                  //click registers attack, and animates cards
+                  animatePic(yourCard, this.id, theirCard);
+                  turn(this, yourCard, theirCard);
+               } else if (!playerOne && (this.className === "playerTwo")) {
+                  $(this).css('border', '5px double cornflowerblue');
+
+                  //pass parameters into turn and animate functions
+                  yourCard = player2choice;
+                  theirCard = player1choice;
+
+                  //click registers attack, and animates cards
+                  animatePic(yourCard, this.id, theirCard);
+                  turn(this, yourCard, theirCard);
+               } else {
+                  if (playerOne) {
+                     alert('Player One: Choose your attack!');
+                  } else {
+                     alert('Player Two: Choose your attack!');
+                  }
+               }
+            }
+         });
+         $(playerScreen).append(cardAtt2);
+
+         var cardDef = $('<p>')
+         $(cardDef).attr('id', 'defense').html('Defense move: <span id="highlight">' + charObj.def[0] + '</span><span class="right"> Type: <span id="highlight">' + charObj.def[2] + '</span></span>');
+         $(playerScreen).append(cardDef);
+
+         //give all card attributes the className of their player
+         $(playerScreen).children().attr('class', setClass);
+
+         //draw health bars
+         $('.health').animate({
+               height: "+=50px"
+            });
+
+         //base width on character health, multiplied for good pixel ratio
+         var healthStartWidth = (charObj.health * 4) + 'px';
+         $(healthBar).animate({
+            width: healthStartWidth,
+         }, "slow");
+
+         //whose health is this?
+         $(healthBar).text(charObj.name);
+
+         //add card on top of decks
+         $('#arena').prepend(playerScreen);
+
+         playerOne = !playerOne; //toggle player
+      } //end card drawing
+
+      //show players deck choices
+      $('#deckOne').show();
+      $('#deckTwo').show();
+   } //end drawBattle()
+
+   //LETS THROW SOME DICE MOTHAF*CKAAAA!
+   function d10(){
+      return Math.ceil(Math.random()*10);
+   }
+   function d6() {
+      return Math.ceil(Math.random()*6);
+   } //FLY LIKE A D-6!!
+   function d3() {
+      return Math.ceil(Math.random()*3);
+   }
+
+   function turn(attackChoice, yourCard, theirCard){
+      //get stats from card
+      attackChoice = attackChoice.id;
+      var maxDamage = yourCard[attackChoice][1];
+      var accuracy = yourCard.accuracy;
+
+      //multiply 4x for pixel proportions
+      if (yourCard.name === 'Snorlax') {
+         maxDamage = maxDamage * 4;
+      } else {
+         //multiply 3x to balance
+         maxDamage = maxDamage * 12;
+      }
+
+      var theirHealth = theirCard.health * 4;
+
+      //roll to calculate raw damage
+      function rawDmg() {
+         //start of roll
+         var raw = 0;
+         //roll dice to see if you got max
+         var hitMax = d10();
+
+         if (hitMax <= accuracy) {
+            raw = maxDamage;
+
+         }
+         //you did not get max damage, what did you get?
+         else {
+            //if your accuracy is low, you have more chance
+            //of missing, or doing less damage
+            var hitOrMiss = (function() {
+
+               if (accuracy < 4) {
+                  switch (d6()) {
+                     case 6:
+                        raw = maxDamage / 2; // 50%
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     case 5:
+                        raw = maxDamage / 4; // 25%
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     default:
+                        raw = 0;
+                        $('header').text('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                        break;
+                  }
+               }
+
+               //the better your character's accuracy
+               //the less likely you'll miss or do less damage
+               else if (accuracy <=7 ) {
+                  switch (hitMax) {
+                     case (accuracy+1) :
+                        raw = maxDamage / 2; // 50 percent
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     case (accuracy+2) :
+                        raw = maxDamage / 4; // 25 percent
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     default :
+                        raw = 0; //none
+                        $('header').text('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                        break;
+                  }
+               }
+
+               //if you're in the middle, you have a 1/3
+               //chance of either doing 50, 25, or 0% damage
+               else {
+                  var rd3 = d3();
+                  switch (rd3) {
+
+                     case 1:
+                        raw = 0; // 0%
+                        $('header').text('Hear that? That\'s the sound of your attack WHIFFING! NO DAMAGE DEALT!');
+                        break;
+                     case 2:
+                        raw = maxDamage / 4; // 25%
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                     default :
+                        raw = maxDamage / 2; // 50%
+                        $('header').text('Uh-oh, you missed! Your attack is weaker!');
+                        break;
+                  }
+               }
+            })();
+            //end of damage calculation
+
+         }
+         //end of else
+         return raw;
+
+         }
+      //end of raw damage dice roll
+
+      function totalDmg(){
+         var yourType = yourCard[attackChoice][2];
+         var theirType = theirCard.def[2];
+
+         var total = rawDmg();
+
+         //different types have strengths/weaknesses
+         $('header').text('Let\'s see how ' + yourType+' stacks up against ' + theirType+'...');
+         if (yourType !== theirType){
+            switch (yourType) {
+               case ('Fire'):
+                     switch (theirType) {
+                        //STRONG
+                        case ('Psychic') :
+                           total = total * 2; //double damage
+                           $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                           break;
+                        //WEAK
+                        case ('Water') :
+                           total = total / 2; //half damage
+                           $('header').text('Yikes! ' + yourType + ' isn\'t super effective against ' + theirType + '.\nYour attack is weakened!');
+                           break;
+                        case ('Ground') :
+                           total = total / 2;
+                           $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                           break;
+                        //NO EFFECT
+                        default :
+                           total = total; //no effect
+                           $('header').text('Eh, no advantage, but no disadvantage either.');
+                           break;
+                        }
+                        break;
+
+               case ('Electric'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Water') :
+                        total = total * 2; //double damage
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     case ('Psychic') :
+                        total = total * 2; //double damage
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Fire') :
+                        total = total / 2; //half damage
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     case ('Ground') :
+                        total = total / 2;
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+               case ('Water'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Fire') :
+                        total = total * 2; //double damage
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     case ('Ground') :
+                        total = total * 2; //double damage
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Electric') :
+                        total = total / 2; //half damage
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     case ('Toxic') :
+                        total = total / 2;
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+               case ('Fighting'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Toxic') :
+                        total = total * 2; //double damage
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Psychic') :
+                        total = total / 2; //half damage
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     case ('Water') :
+                        total = total / 2;
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+               case ('Toxic'):
+                  switch (theirType) {
+                     //WEAK
+                     case ('Water') :
+                        total = total / 2; //half damage
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     case ('Fighting') :
+                        total = total; //no effect
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     //TOXIC IS OP SON!
+                     default :
+                        total = total * 2; //double damage
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     }
+                     break;
+
+               case ('Ground'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Electric') :
+                        total = total * 2; //double damage
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     case ('Fire') :
+                        total = total * 2; //double damage
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Water') :
+                        total = total / 2;
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+               case ('Psychic'):
+                  switch (theirType) {
+                     //STRONG
+                     case ('Fighting') :
+                        total = total * 2; //double damage
+                        $('header').text(yourType + ' SLAMS ' + theirType + ' with DOUBLE DAMAGE!');
+                        break;
+                     //WEAK
+                     case ('Ground') :
+                        total = total / 2;
+                        $('header').text('Yikes! ' + yourType + ' isn\'t super effective against '+ theirType + '.\nYour attack is weakened!');
+                        break;
+                     //NO EFFECT
+                     default :
+                        total = total; //no effect
+                        $('header').text('Eh, no advantage, but no disadvantage either.');
+                        break;
+                     }
+                     break;
+
+            }
+         }
+         // if same type, no effect
+         else if (yourType === theirType) {
+            $('header').text('Stop the in-fighting: there\'s no advantage to fighting your own kind!');
+         }
+         //amounts were small
+         theirHealth = theirHealth - total;
+         $('header').text('You dealt a total of '+ total + ' to your opponent.');
+         $('header').text(theirCard.name + ' now has ' + (theirHealth / 4) + ' HP.');
+
+         if (playerOne) {
+            $('#health2').animate({
+               width: '-= total',
+            });
+         }
+         else {
+            $('#health1').animate({
+               width: '-= total',
+            })
+         }
+      }
+      //end of offensive roll
+      totalDmg();
+
+      //regen roll
+      //NO ZOMBIES!
+      if (theirHealth > 0) {
+      //ok, they aren't dead...yet. Regenerate!
+      $('header').text('Uh-oh, your opponent has a chance to heal!');
+         var rollRegen = function() {
+            //accuracy also determines if your defense
+            //has a chance to heal.
+            //var regen = def[1]
+
+            var regen = theirCard.def[1];
+            var regAcc = theirCard.accuracy;
+            var regRoll = d10();
+
+            if ((regRoll <= accuracy) && (theirCard.name !== 'Snorlax')) {
+               theirHealth = theirHealth + regen;
+               $('header').text(theirCard.name + ' healed for: ' + regen + ' HP!');
+            } else if (theirCard.name == 'Snorlax'){
+               theirHealth = theirHealth + regen;
+               $('header').text('Snorlax took a nap and healed for: ' + regen + ' HP!');
+            } else {
+               $('header').text('Whew! No regeneration this time!');
+            }
+            return regen;
+         };
+         //end regen roll
+         rollRegen();
+         theirCard.health = theirHealth;
+      }
+         //assign enemy health to card.
+      else {
+         $('header').text(yourCard.name + ' won! It only took you: ' + (turnCount * 2) + ' turns...');
+         $('header').text('Game over! Refresh!');
+         gameOver = true;
+      }
+
+      //end of turn.
+      playerOne = !playerOne;
+
+      turnCount = turnCount + .5;
+
+   };
+
+   function animatePic(yourCard, attackchoice, theirCard){
+      var yourOldPic = '';
+      var theirOldPic = '';
+      var yourNewPic = yourCard[attackchoice][3];
+      var theirNewPic = theirCard.def[3];
+
+      debugger
+      if (playerOne) {
+         yourOldPic = $('img#avi-preview.playerOne');
+         theirOldPic = $('img#avi-preview.playerTwo');
+      } else {
+         yourOldPic = $('img#avi-preview.playerTwo');
+         theirOldPic = $('img#avi-preview.playerOne');
+      }
+
+      $(yourOldPic).css('background-image', 'url(' + yourNewPic + ')');
+      $(theirOldPic).css('background-image', 'url(' + theirNewPic + ')');
+
+      window.setTimeout(changeBack(yourOldPic, theirOldPic, yourCard, theirCard), 3000);
+
+      function changeBack(yourOldPic, theirOldPic, yourCard, theirCard){
+         $(yourOldPic).css('background-image', 'url(' + yourCard.avatar[0] +')');
+         $(theirOldPic).css('background-image', 'url(' + theirCard.avatar[0] +')');
+      }
+
+   }
+
+
+
+
+
+
+
+
+
+
+
+}//end onload
